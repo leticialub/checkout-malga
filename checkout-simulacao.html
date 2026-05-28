@@ -3,567 +3,1083 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Checkout | Malga — Simulação 2 Cartões</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <title>Checkout — Simulação v2 | 2 Cartões</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          borderRadius: { xl: '0.625rem' },
-          colors: {
-            card: 'var(--card)',
-            border: 'var(--border-solid)',
-            input: 'var(--input)',
-            primary: 'var(--primary)',
-            muted: 'var(--muted)',
-          }
-        }
-      }
-    }
-  </script>
   <style>
     :root {
-      --background: #333333;
-      --foreground: #1a1a1a;
-      --card: #fafafa;
-      --card-foreground: #1a1a1a;
-      --border-solid: #e4e4e7;
-      --input-bg: #ebebeb;
-      --primary: #474747;
-      --primary-foreground: #fafafa;
-      --muted: #f4f4f5;
-      --muted-foreground: #71717a;
-      --ring: #6a6a6a;
-      --radius: 0.625rem;
+      --bg: #f4f5f7;
+      --surface: #ffffff;
+      --primary: #0086ff;
+      --primary-dark: #006fd6;
+      --text: #1a1a1a;
+      --text-muted: #6b7280;
+      --border: #e5e7eb;
+      --success: #00a651;
+      --warning-bg: #fffbeb;
+      --warning-border: #fbbf24;
+      --warning-text: #92400e;
+      --radius: 8px;
+      --shadow: 0 1px 4px rgba(0,0,0,.08);
     }
 
-    * { box-sizing: border-box; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       font-family: 'Inter', sans-serif;
-      background-color: var(--background);
-      color: var(--foreground);
+      background: var(--bg);
+      color: var(--text);
       min-height: 100vh;
-      margin: 0;
+      font-size: 14px;
     }
 
-    /* ── Card ──────────────────────────────────────────── */
-    .card {
-      background: var(--card);
-      color: var(--card-foreground);
-      border-radius: var(--radius);
-      border: 1px solid var(--border-solid);
-      box-shadow: 0 1px 3px rgba(0,0,0,.08);
+    /* ── Top bar ──────────────────────────────────────── */
+    .top-bar {
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+      height: 56px;
+      display: flex;
+      align-items: center;
     }
-
-    /* ── Input ─────────────────────────────────────────── */
-    .input {
+    .top-bar-inner {
+      max-width: 960px;
+      margin: 0 auto;
       width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo { font-weight: 700; font-size: 20px; color: #1a1a1a; letter-spacing: -1px; }
+    .secure-badge { font-size: 12px; color: var(--text-muted); display: flex; align-items: center; gap: 5px; }
+
+    /* ── Page visibility ──────────────────────────────── */
+    .page { display: none; }
+    .page.active { display: block; }
+
+    /* ── Layout ────────────────────────────────────────── */
+    .checkout-layout {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 24px 16px;
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 20px;
+      align-items: start;
+    }
+
+    /* ── Content card ────────────────────────────────── */
+    .content-card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    /* ── Page header ─────────────────────────────────── */
+    .page-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+    .back-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text-muted);
+      padding: 4px 2px;
+      display: flex;
+      align-items: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .back-btn:hover { color: var(--text); }
+    .page-title { font-size: 20px; font-weight: 700; line-height: 1.2; }
+    .page-subtitle { font-size: 13px; color: var(--text-muted); margin-top: 3px; }
+
+    /* ── Method list ─────────────────────────────────── */
+    .method-list { display: flex; flex-direction: column; gap: 10px; }
+
+    .method-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 16px;
+      background: var(--surface);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      cursor: pointer;
+      width: 100%;
+      text-align: left;
+      transition: border-color .15s, box-shadow .15s;
+      font-family: inherit;
+    }
+    .method-row:hover {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(0,134,255,.1);
+    }
+    .method-icon {
+      width: 36px;
       height: 36px;
-      border: 1px solid var(--border-solid);
-      border-radius: calc(var(--radius) * 0.75);
-      background: transparent;
-      padding: 0 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .method-info { flex: 1; }
+    .method-name { font-size: 15px; font-weight: 500; color: var(--text); display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .method-sub { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
+    .badge-discount { font-size: 12px; color: var(--success); font-weight: 600; margin-top: 2px; }
+    .badge-new {
+      display: inline-flex;
+      align-items: center;
+      background: var(--primary);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: .4px;
+      flex-shrink: 0;
+    }
+    .chevron { color: var(--text-muted); font-size: 22px; line-height: 1; flex-shrink: 0; }
+
+    /* ── Card visual ─────────────────────────────────── */
+    .card-visual {
+      background: linear-gradient(140deg, #0d47a1 0%, #1565c0 35%, #1976d2 65%, #2196f3 100%);
+      border-radius: 14px;
+      padding: 18px 22px 16px;
+      color: #fff;
+      height: 168px;
+      width: 100%;
+      max-width: 320px;
+      margin: 0 auto 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 8px 24px rgba(13,71,161,.3);
+      position: relative;
+      overflow: hidden;
+    }
+    .card-visual::before {
+      content: '';
+      position: absolute;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.06);
+      top: -80px;
+      right: -50px;
+    }
+    .card-visual::after {
+      content: '';
+      position: absolute;
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.04);
+      bottom: -60px;
+      left: -30px;
+    }
+    .card-chip {
+      width: 34px;
+      height: 26px;
+      background: linear-gradient(135deg, #ffd54f 0%, #ffb300 100%);
+      border-radius: 4px;
+      position: relative;
+      z-index: 1;
+    }
+    .card-number {
+      font-size: 13px;
+      letter-spacing: 2px;
+      font-family: 'Courier New', monospace;
+      position: relative;
+      z-index: 1;
+      white-space: nowrap;
+    }
+    .card-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 8px;
+      position: relative;
+      z-index: 1;
+    }
+    .card-name {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .6px;
+      opacity: .9;
+      flex: 1;
+      min-width: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .card-expiry { font-size: 11px; opacity: .8; flex-shrink: 0; }
+
+    /* ── Form ────────────────────────────────────────── */
+    .form-group { margin-bottom: 16px; }
+    .form-label { display: block; font-size: 13px; font-weight: 500; color: var(--text-muted); margin-bottom: 6px; }
+    .form-input {
+      width: 100%;
+      height: 44px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0 14px;
       font-size: 14px;
       font-family: inherit;
-      color: var(--foreground);
       outline: none;
-      transition: border-color .15s, box-shadow .15s;
+      transition: border-color .15s;
+      background: #fff;
+      color: var(--text);
     }
-    .input:focus {
-      border-color: var(--ring);
-      box-shadow: 0 0 0 3px rgba(106,106,106,.15);
-    }
-    .input::placeholder { color: var(--muted-foreground); }
-    select.input { cursor: pointer; appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2371717a' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
-      background-repeat: no-repeat; background-position: right 10px center; padding-right: 28px; }
+    .form-input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(0,134,255,.12); }
+    .form-input::placeholder { color: #c0c4cd; }
+    .form-row { display: flex; gap: 12px; }
+    .form-row .form-group { flex: 1; }
 
-    /* ── Label ─────────────────────────────────────────── */
-    .field-label {
+    /* ── Checkbox ────────────────────────────────────── */
+    .checkbox-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 20px;
+      padding: 12px 14px;
+      background: #f8fafc;
+      border-radius: var(--radius);
+    }
+    .checkbox-row input[type="checkbox"] {
+      width: 16px; height: 16px;
+      margin-top: 1px; flex-shrink: 0;
+      accent-color: var(--primary);
+      cursor: pointer;
+    }
+    .checkbox-label { font-size: 13px; color: var(--text-muted); cursor: pointer; line-height: 1.4; }
+    .checkbox-label a { color: var(--primary); text-decoration: none; font-weight: 500; }
+
+    /* ── Buttons ─────────────────────────────────────── */
+    .btn-primary {
+      width: 100%;
+      height: 48px;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: var(--radius);
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background .15s, transform .1s;
+    }
+    .btn-primary:hover { background: var(--primary-dark); }
+    .btn-primary:active { transform: scale(.99); }
+    .btn-primary:disabled { background: #d1d5db; cursor: not-allowed; transform: none; }
+    .btn-green { background: var(--success); }
+    .btn-green:hover { background: #008a44; }
+
+    /* ── Saved card row ──────────────────────────────── */
+    .saved-card-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 20px;
+      background: #f8fafc;
+    }
+    .saved-card-info { display: flex; align-items: center; gap: 10px; }
+    .visa-badge {
+      background: #1565c0;
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 3px 7px;
+      border-radius: 4px;
+      letter-spacing: .3px;
+    }
+    .alter-link {
       font-size: 13px;
+      color: var(--primary);
       font-weight: 500;
-      color: var(--foreground);
+      cursor: pointer;
+      background: none;
+      border: none;
+      font-family: inherit;
+      padding: 0;
+    }
+    .alter-link:hover { text-decoration: underline; }
+
+    /* ── Amount input ────────────────────────────────── */
+    .amount-hint {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 6px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .amount-hint.error { color: #dc2626; }
+
+    /* ── Installments ────────────────────────────────── */
+    .installments-wrap { margin-top: 16px; }
+    .installments-label {
+      font-size: 13px;
+      color: var(--text-muted);
+      font-weight: 500;
+      margin-bottom: 6px;
       display: flex;
       align-items: center;
       gap: 6px;
     }
-
-    /* ── Radio button ──────────────────────────────────── */
-    .radio-btn {
-      width: 16px; height: 16px; flex-shrink: 0;
-      border-radius: 50%;
-      border: 1px solid var(--border-solid);
-      background: transparent;
-      cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      transition: border-color .15s, box-shadow .15s;
+    .installments-select {
+      width: 100%;
+      height: 44px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0 36px 0 14px;
+      font-size: 14px;
+      font-family: inherit;
       outline: none;
-      padding: 0;
+      appearance: none;
+      background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E") no-repeat right 12px center;
+      color: var(--text);
     }
-    .radio-btn:focus-visible { box-shadow: 0 0 0 3px rgba(106,106,106,.15); }
-    .radio-btn[aria-checked="true"] {
-      border-color: var(--primary);
+    .installments-select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(0,134,255,.12); }
+
+    /* ── Sidebar ─────────────────────────────────────── */
+    .sidebar-card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: var(--shadow);
+      position: sticky;
+      top: 24px;
+    }
+    .sidebar-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+    .sidebar-row.total {
+      font-size: 15px;
+      font-weight: 700;
+      border-top: 1px solid var(--border);
+      padding-top: 12px;
+      margin-top: 6px;
+      margin-bottom: 0;
+    }
+    .sidebar-btn-wrap { margin-top: 16px; }
+
+    /* Coupon */
+    .coupon-row { display: flex; gap: 8px; margin-bottom: 16px; }
+    .coupon-input {
+      flex: 1;
+      height: 40px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      padding: 0 12px;
+      font-size: 13px;
+      font-family: inherit;
+      outline: none;
+      transition: border-color .15s;
+    }
+    .coupon-input:focus { border-color: var(--primary); }
+    .btn-coupon {
+      height: 40px;
+      padding: 0 16px;
+      background: #fff;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
       color: var(--primary);
     }
-    .radio-btn .dot {
-      width: 8px; height: 8px; border-radius: 50%;
-      background: var(--primary);
-      display: none;
-    }
-    .radio-btn[aria-checked="true"] .dot { display: block; }
+    .btn-coupon:hover { border-color: var(--primary); }
 
-    /* ── Payment option row ────────────────────────────── */
-    .pay-label {
-      display: flex; align-items: center; gap: 8px;
+    /* Card 1 recap */
+    .card-recap {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px 14px;
+      margin-top: 16px;
+    }
+    .card-recap-header {
+      display: flex;
       justify-content: space-between;
-      width: 100%; padding: 24px 0;
-      font-size: 14px; font-weight: 500;
-      cursor: pointer; user-select: none;
+      align-items: center;
+      font-size: 12px;
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .4px;
+      margin-bottom: 10px;
     }
+    .card-recap-row { display: flex; align-items: center; gap: 8px; font-size: 13px; }
+    .card-recap-amount { margin-left: auto; font-weight: 600; font-size: 14px; }
+    .card-recap-inst { font-size: 12px; color: var(--text-muted); margin-top: 4px; padding-left: 0; }
 
-    /* ── Button ────────────────────────────────────────── */
-    .btn-primary {
-      width: 100%; height: 40px;
-      background: var(--primary);
-      color: var(--primary-foreground);
-      border: none; border-radius: calc(var(--radius) * 0.75);
-      font-size: 14px; font-weight: 500;
-      cursor: pointer; font-family: inherit;
-      transition: opacity .15s;
+    /* ── Review page ─────────────────────────────────── */
+    .review-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
     }
-    .btn-primary:hover { opacity: .88; }
-
-    /* ── Info banner ───────────────────────────────────── */
-    .info-banner {
-      background: var(--muted);
-      border-radius: calc(var(--radius) * 0.75);
-      padding: 10px 14px;
-      display: flex; align-items: flex-start; gap: 8px;
-      font-size: 12px; color: var(--muted-foreground);
+    .review-section { margin-bottom: 20px; }
+    .review-section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
     }
-
-    /* ── Section separator inside card ────────────────── */
-    .card-section-sep {
-      font-size: 11px; font-weight: 600;
-      text-transform: uppercase; letter-spacing: .06em;
-      color: var(--muted-foreground);
-      padding-bottom: 10px;
-      border-bottom: 1px solid var(--border-solid);
+    .review-section-title { font-size: 16px; font-weight: 700; }
+    .review-warning {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 12px 14px;
+      background: var(--warning-bg);
+      border: 1px solid var(--warning-border);
+      border-radius: var(--radius);
+      margin-bottom: 14px;
+      font-size: 13px;
+      color: var(--warning-text);
+      line-height: 1.5;
     }
-
-    /* ── Vertical divider between cards ───────────────── */
-    .vdivider {
-      width: 1px; background: var(--border-solid);
-      align-self: stretch; margin-top: 22px;
-      flex-shrink: 0;
+    .review-delivery {
+      padding: 14px 16px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 14px;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
+    .review-payment-row {
+      padding: 14px 16px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-bottom: 8px;
+    }
+    .review-payment-card {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+    .review-payment-amount { font-size: 14px; font-weight: 600; margin-bottom: 3px; }
+    .review-payment-inst { font-size: 12px; color: var(--text-muted); }
 
-    /* ── Collapsible content ───────────────────────────── */
-    .pay-content { display: none; }
-    .pay-content.open { display: block; }
-
-    /* ── Identification card (collapsed) ───────────────── */
-    .id-card-info { font-size: 13px; color: var(--muted-foreground); line-height: 1.6; }
+    /* ── Divider ─────────────────────────────────────── */
+    .divider { height: 1px; background: var(--border); margin: 20px 0; }
   </style>
 </head>
-
 <body>
-  <!-- Header -->
-  <header style="background:#1a1a1a; padding:16px 32px;">
-    <svg width="80" height="22" viewBox="0 0 80 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <text x="0" y="18" font-family="Inter,sans-serif" font-size="18" font-weight="700" fill="white">malga</text>
-    </svg>
-  </header>
 
-  <main style="max-width:1000px; margin:0 auto; padding:32px 24px; display:grid; grid-template-columns:minmax(0,1fr) 340px; gap:24px; align-items:start; box-sizing:border-box;">
-
-    <!-- LEFT COLUMN -->
-    <div style="display:flex; flex-direction:column; gap:16px;">
-
-      <!-- Identificação (collapsed) -->
-      <div class="card" style="padding:24px;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
-          <span style="font-size:16px; font-weight:600;">Identificação</span>
-          <button onclick="toggleId()" style="font-size:13px; font-weight:500; color:var(--primary); background:none; border:none; cursor:pointer; display:flex; align-items:center; gap:4px;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-            Editar
-          </button>
-        </div>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:4px 32px;" class="id-card-info">
-          <span>Leticia Teste</span>
-          <span>Avenida Paulista, 1000</span>
-          <span>leticia@teste.com</span>
-          <span>Bela Vista</span>
-          <span>(11) 99999-9999</span>
-          <span>São Paulo, SP</span>
-          <span>123.456.789-09</span>
-          <span>01310-100</span>
-        </div>
-      </div>
-
-      <!-- Pagamento -->
-      <div class="card" style="padding:24px;">
-        <h2 style="font-size:16px; font-weight:600; margin:0 0 20px;">Pagamento</h2>
-
-        <div style="display:grid; gap:12px;" id="payment-options">
-
-          <!-- ① Cartão de crédito -->
-          <div class="card" style="padding:0;" id="opt-credit">
-            <div style="padding:0 16px;">
-              <div style="display:flex; align-items:center; gap:12px;">
-                <button class="radio-btn" id="rb-credit" role="radio" aria-checked="true" onclick="selectMethod('credit')">
-                  <span class="dot"></span>
-                </button>
-                <label class="pay-label" onclick="selectMethod('credit')">
-                  <div style="display:flex; align-items:center; gap:8px;">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
-                    Cartão de crédito
-                  </div>
-                </label>
-              </div>
-            </div>
-            <div class="pay-content open" id="content-credit" style="padding:0 16px 20px;">
-              <div style="display:flex; flex-direction:column; gap:12px;">
-                <div style="display:flex; flex-direction:column; gap:6px;">
-                  <label class="field-label">Número do cartão</label>
-                  <input class="input" type="tel" placeholder="0000 0000 0000 0000" maxlength="19" oninput="fmtCard(this)" />
-                </div>
-                <div style="display:flex; gap:12px;">
-                  <div style="flex:1; display:flex; flex-direction:column; gap:6px;">
-                    <label class="field-label">Data de expiração</label>
-                    <input class="input" type="text" placeholder="MM/AA" maxlength="5" oninput="fmtExpiry(this)" />
-                  </div>
-                  <div style="flex:1; display:flex; flex-direction:column; gap:6px;">
-                    <label class="field-label">CVV</label>
-                    <input class="input" type="tel" placeholder="3 dígitos" maxlength="4" />
-                  </div>
-                </div>
-                <div style="display:flex; gap:12px;">
-                  <div style="flex:1; display:flex; flex-direction:column; gap:6px;">
-                    <label class="field-label">Nome do titular do cartão</label>
-                    <input class="input" type="text" placeholder="Nome no cartão" />
-                  </div>
-                  <div style="flex:1; display:flex; flex-direction:column; gap:6px;">
-                    <label class="field-label">Parcelamento</label>
-                    <select class="input">
-                      <option>1x de R$ 200,00</option>
-                      <option>2x de R$ 100,00</option>
-                      <option>3x de R$ 66,67</option>
-                      <option>4x de R$ 50,00</option>
-                    </select>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- ② Pix -->
-          <div class="card" style="padding:0;" id="opt-pix">
-            <div style="padding:0 16px;">
-              <div style="display:flex; align-items:center; gap:12px;">
-                <button class="radio-btn" id="rb-pix" role="radio" aria-checked="false" onclick="selectMethod('pix')">
-                  <span class="dot"></span>
-                </button>
-                <label class="pay-label" onclick="selectMethod('pix')">
-                  <div style="display:flex; align-items:center; gap:8px;">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>
-                    Pix
-                  </div>
-                </label>
-              </div>
-            </div>
-            <div class="pay-content" id="content-pix" style="padding:0 16px 20px;">
-              <div class="info-banner">
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="16"/><line x1="8" x2="16" y1="12" y2="12"/></svg>
-                Após confirmar, um QR Code Pix será gerado. O pagamento é confirmado em segundos.
-              </div>
-            </div>
-          </div>
-
-          <!-- ③ 2 Cartões ─────────────────────────────── -->
-          <div class="card" style="padding:0;" id="opt-dual">
-            <div style="padding:0 16px;">
-              <div style="display:flex; align-items:center; gap:12px;">
-                <button class="radio-btn" id="rb-dual" role="radio" aria-checked="false" onclick="selectMethod('dual')">
-                  <span class="dot"></span>
-                </button>
-                <label class="pay-label" onclick="selectMethod('dual')">
-                  <div style="display:flex; align-items:center; gap:6px;">
-                    <!-- dois ícones de cartão empilhados -->
-                    <span style="position:relative; width:22px; height:16px; display:inline-flex;">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="position:absolute;left:0;top:0;"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="position:absolute;left:5px;top:4px;opacity:.55;"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
-                    </span>
-                    2 cartões
-                  </div>
-                </label>
-              </div>
-            </div>
-
-            <!-- Conteúdo expandido — wizard sequencial -->
-            <div class="pay-content" id="content-dual" style="padding:0 16px 20px;">
-
-              <!-- ── STEP 1: Valor do Cartão 1 ──────────── -->
-              <div id="dual-step-amount">
-                <div style="margin-bottom:10px;">
-                  <input class="input" id="amt1-input" type="text"
-                    placeholder="Qual valor deseja pagar com o Cartão de crédito número 1?"
-                    style="height:44px; font-size:14px;"
-                    oninput="onAmt1Input()" onblur="formatAmt1Input()" />
-                </div>
-                <div style="text-align:right; font-size:13px; color:var(--muted-foreground); margin-bottom:16px;">
-                  Valor total da compra: <strong style="color:var(--foreground);">R$ 200,00*</strong>
-                </div>
-                <div id="amt1-confirm-row" style="display:none; padding:14px 16px; border:1px solid var(--border-solid); border-radius:var(--radius); font-size:14px; margin-bottom:16px;">
-                  <div style="display:flex; justify-content:space-between; align-items:center; gap:12px;">
-                    <div>
-                      <div style="color:var(--muted-foreground); font-size:13px; margin-bottom:2px;">Valor a ser pago com o</div>
-                      <div style="font-weight:600;">Cartão de crédito número 1:</div>
-                    </div>
-                    <div style="font-weight:700; color:#1a7a3c; font-size:15px; flex-shrink:0;" id="amt1-live-display">R$ 0,00*</div>
-                  </div>
-                </div>
-                <button id="btn-goto-card1" class="btn-primary" style="display:none;" onclick="dualGoStep('card1')">Informar dados do Cartão número 1</button>
-                <p style="font-size:11px; color:var(--muted-foreground); margin:10px 0 0; text-align:center;">*A quantidade de parcelas poderá alterar o valor da compra.</p>
-              </div>
-
-              <!-- ── STEP 2: Formulário Cartão 1 ──────────── -->
-              <div id="dual-step-card1" style="display:none;">
-                <div style="display:flex; align-items:center; gap:8px; margin-bottom:16px;">
-                  <button onclick="dualGoStep('amount')" style="background:none; border:none; cursor:pointer; padding:4px; display:flex; align-items:center; color:var(--muted-foreground);" title="Voltar">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-                  </button>
-                  <span style="font-size:14px; font-weight:600;">Dados do Cartão de crédito número 1</span>
-                </div>
-                <div style="display:flex; flex-direction:column; gap:12px; margin-bottom:16px;">
-                  <input class="input" type="tel" placeholder="Número do cartão*" maxlength="19" oninput="fmtCard(this)" />
-                  <input class="input" type="text" placeholder="Nome impresso no cartão*" />
-                  <div style="display:flex; gap:10px;">
-                    <select class="input" style="flex:1;">
-                      <option value="">Validade/mês</option>
-                      <option>01 - Janeiro</option><option>02 - Fevereiro</option><option>03 - Março</option>
-                      <option>04 - Abril</option><option>05 - Maio</option><option>06 - Junho</option>
-                      <option>07 - Julho</option><option>08 - Agosto</option><option>09 - Setembro</option>
-                      <option>10 - Outubro</option><option>11 - Novembro</option><option>12 - Dezembro</option>
-                    </select>
-                    <select class="input" style="flex:1;">
-                      <option value="">Validade/ano</option>
-                      <option>2025</option><option>2026</option><option>2027</option><option>2028</option>
-                      <option>2029</option><option>2030</option><option>2031</option><option>2032</option>
-                      <option>2033</option><option>2034</option><option>2035</option>
-                    </select>
-                    <input class="input" type="tel" placeholder="CVV*" maxlength="4" style="flex:1;" />
-                  </div>
-                  <div style="display:flex; flex-direction:column; gap:6px;">
-                    <label class="field-label" style="font-size:12px; color:var(--muted-foreground);">Parcelas</label>
-                    <select class="input" id="inst1"></select>
-                  </div>
-                </div>
-                <button class="btn-primary" onclick="syncConfirmAmounts(); dualGoStep('confirm')">Continuar para o Cartão 2</button>
-              </div>
-
-              <!-- ── STEP 3: Confirmação dos valores ──────────── -->
-              <div id="dual-step-confirm" style="display:none;">
-                <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:20px;">
-                  <div style="display:flex; justify-content:space-between; align-items:center; padding:14px 16px; background:var(--muted); border-radius:var(--radius); font-size:14px;">
-                    <span style="color:var(--muted-foreground);">Valor total da compra:</span>
-                    <span style="font-weight:600;">R$ 200,00*</span>
-                  </div>
-                  <div style="padding:14px 16px; border:1px solid var(--border-solid); border-radius:var(--radius); font-size:14px;">
-                    <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:12px;">
-                      <div>
-                        <div style="color:var(--muted-foreground); margin-bottom:2px; font-size:13px;">Valor a ser pago com o</div>
-                        <div style="font-weight:600;">Cartão de crédito número 1:</div>
-                      </div>
-                      <div style="text-align:right; flex-shrink:0;">
-                        <div id="confirm-amt1" style="font-weight:700; color:#1a7a3c; font-size:15px;">R$ 100,00*</div>
-                        <button onclick="dualGoStep('amount')" style="font-size:12px; color:var(--primary); background:none; border:none; cursor:pointer; padding:2px 0; font-family:inherit; font-weight:500;">Editar valor</button>
-                      </div>
-                    </div>
-                  </div>
-                  <div style="padding:14px 16px; border:1px solid var(--border-solid); border-radius:var(--radius); font-size:14px;">
-                    <div style="display:flex; justify-content:space-between; align-items:center; gap:12px;">
-                      <div>
-                        <div style="color:var(--muted-foreground); margin-bottom:2px; font-size:13px;">Valor a ser pago com o</div>
-                        <div style="font-weight:600;">Cartão de crédito número 2:</div>
-                      </div>
-                      <div style="font-weight:700; color:#1a7a3c; font-size:15px; flex-shrink:0;" id="confirm-amt2">R$ 100,00*</div>
-                    </div>
-                  </div>
-                </div>
-                <button class="btn-primary" onclick="dualGoStep('card2')">Informar dados do Cartão número 2</button>
-                <p style="font-size:11px; color:var(--muted-foreground); margin:10px 0 0; text-align:center;">*A quantidade de parcelas poderá alterar o valor da compra.</p>
-              </div>
-
-              <!-- ── STEP 4: Formulário Cartão 2 ──────────── -->
-              <div id="dual-step-card2" style="display:none;">
-                <div style="display:flex; align-items:center; gap:8px; margin-bottom:16px;">
-                  <button onclick="dualGoStep('confirm')" style="background:none; border:none; cursor:pointer; padding:4px; display:flex; align-items:center; color:var(--muted-foreground);" title="Voltar">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-                  </button>
-                  <span style="font-size:14px; font-weight:600;">Dados do Cartão de crédito número 2</span>
-                </div>
-                <div style="display:flex; flex-direction:column; gap:12px; margin-bottom:16px;">
-                  <input class="input" type="tel" placeholder="Número do cartão*" maxlength="19" oninput="fmtCard(this)" />
-                  <input class="input" type="text" placeholder="Nome impresso no cartão*" />
-                  <div style="display:flex; gap:10px;">
-                    <select class="input" style="flex:1;">
-                      <option value="">Validade/mês</option>
-                      <option>01 - Janeiro</option><option>02 - Fevereiro</option><option>03 - Março</option>
-                      <option>04 - Abril</option><option>05 - Maio</option><option>06 - Junho</option>
-                      <option>07 - Julho</option><option>08 - Agosto</option><option>09 - Setembro</option>
-                      <option>10 - Outubro</option><option>11 - Novembro</option><option>12 - Dezembro</option>
-                    </select>
-                    <select class="input" style="flex:1;">
-                      <option value="">Validade/ano</option>
-                      <option>2025</option><option>2026</option><option>2027</option><option>2028</option>
-                      <option>2029</option><option>2030</option><option>2031</option><option>2032</option>
-                      <option>2033</option><option>2034</option><option>2035</option>
-                    </select>
-                    <input class="input" type="tel" placeholder="CVV*" maxlength="4" style="flex:1;" />
-                  </div>
-                  <div style="display:flex; flex-direction:column; gap:6px;">
-                    <label class="field-label" style="font-size:12px; color:var(--muted-foreground);">Parcelas</label>
-                    <select class="input" id="inst2"></select>
-                  </div>
-                </div>
-                <button class="btn-primary" onclick="handlePay()">Finalizar compra</button>
-              </div>
-
-            </div><!-- /content-dual -->
-          </div><!-- /opt-dual -->
-
-        </div><!-- /payment-options -->
-
-        <!-- Submit -->
-        <div style="margin-top:20px;">
-          <button class="btn-primary" id="pay-btn" onclick="handlePay()">Pagar R$ 200,00</button>
-        </div>
-      </div>
-    </div><!-- /left column -->
-
-    <!-- RIGHT COLUMN — Pedido -->
-    <div class="card" style="padding:24px; position:sticky; top:24px;">
-      <h2 style="font-size:15px; font-weight:600; margin:0 0 16px;">Pedido</h2>
-      <div style="display:flex; justify-content:space-between; font-size:14px; margin-bottom:4px;">
-        <span>fone de ouvido</span>
-        <span style="font-weight:500;">R$ 200,00</span>
-      </div>
-      <div style="font-size:12px; color:var(--muted-foreground); margin-bottom:20px;">Quantidade: 1</div>
-      <div style="border-top:1px solid var(--border-solid); padding-top:16px; display:flex; justify-content:space-between;">
-        <span style="font-weight:600;">Total</span>
-        <span style="font-weight:700; font-size:16px;">R$ 200,00</span>
+  <!-- Top bar -->
+  <div class="top-bar">
+    <div class="top-bar-inner">
+      <div class="logo">malga</div>
+      <div class="secure-badge">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#00a651" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        Ambiente seguro
       </div>
     </div>
+  </div>
 
-  </main>
+  <!-- ════════════════════════════════════════════════
+       PAGE 1 — Escolha como pagar
+  ════════════════════════════════════════════════ -->
+  <div id="page-methods" class="page active">
+    <div class="checkout-layout">
+      <div>
+        <div class="content-card">
+          <div style="margin-bottom:24px;">
+            <h1 class="page-title">Escolha como pagar</h1>
+          </div>
+          <div class="method-list">
+
+            <!-- Pix -->
+            <button class="method-row" onclick="startPix()">
+              <div class="method-icon">
+                <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
+                  <path d="M16 4 L22 10 L16 16 L10 10 Z" fill="#32bcad"/>
+                  <path d="M16 16 L22 22 L16 28 L10 22 Z" fill="#32bcad"/>
+                  <path d="M4 16 L10 10 L16 16 L10 22 Z" fill="#32bcad"/>
+                  <path d="M16 16 L22 10 L28 16 L22 22 Z" fill="#32bcad"/>
+                </svg>
+              </div>
+              <div class="method-info">
+                <div class="method-name">Pix</div>
+                <div class="badge-discount">Desconto de R$ 20,00</div>
+              </div>
+              <span class="chevron">›</span>
+            </button>
+
+            <!-- Novo cartão de crédito -->
+            <button class="method-row" onclick="startSingle()">
+              <div class="method-icon">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#0086ff" stroke-width="1.5" stroke-linecap="round">
+                  <rect x="1" y="4" width="22" height="16" rx="2"/>
+                  <line x1="1" y1="10" x2="23" y2="10"/>
+                </svg>
+              </div>
+              <div class="method-info">
+                <div class="method-name">Novo cartão de crédito</div>
+              </div>
+              <span class="chevron">›</span>
+            </button>
+
+            <!-- Pagar com 2 cartões -->
+            <button class="method-row" onclick="startDual()">
+              <div class="method-icon">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round">
+                  <rect x="1" y="6" width="18" height="13" rx="2" stroke="#0086ff"/>
+                  <rect x="5" y="3" width="18" height="13" rx="2" stroke="#0086ff" fill="white"/>
+                  <line x1="5" y1="8" x2="23" y2="8" stroke="#0086ff"/>
+                </svg>
+              </div>
+              <div class="method-info">
+                <div class="method-name">
+                  Pagar com 2 cartões
+                  <span class="badge-new">Novo</span>
+                </div>
+                <div class="method-sub">Pagamento mínimo de R$ 20,00 por cartão</div>
+              </div>
+              <span class="chevron">›</span>
+            </button>
+
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="sidebar-card">
+          <div class="coupon-row">
+            <input class="coupon-input" type="text" placeholder="Tem um código de cupom?" />
+            <button class="btn-coupon">Inserir</button>
+          </div>
+          <div class="sidebar-row">
+            <span style="color:var(--text-muted);">Subtotal:</span>
+            <span style="font-weight:600;">R$ 200,00</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════════
+       PAGE 2 — Informe o primeiro cartão (dados)
+  ════════════════════════════════════════════════ -->
+  <div id="page-card1-form" class="page">
+    <div class="checkout-layout">
+      <div>
+        <div class="content-card">
+          <div class="page-header">
+            <button class="back-btn" onclick="goPage('methods')">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+            </button>
+            <div>
+              <h1 class="page-title">Informe o primeiro cartão</h1>
+            </div>
+          </div>
+
+          <!-- Card visual -->
+          <div class="card-visual">
+            <div class="card-chip"></div>
+            <div class="card-number" id="cv1-number">**** **** **** ****</div>
+            <div class="card-bottom">
+              <div class="card-name" id="cv1-name">NOME IMPRESSO NO CARTÃO</div>
+              <div class="card-expiry" id="cv1-expiry">MM/AA</div>
+            </div>
+          </div>
+
+          <!-- Form fields -->
+          <div class="form-group">
+            <label class="form-label">Número do cartão</label>
+            <input class="form-input" id="c1-number" type="tel" placeholder="0000 0000 0000 0000" maxlength="19"
+              oninput="fmtCard(this); updateCardVisual(1)" />
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Validade</label>
+              <input class="form-input" id="c1-expiry" type="tel" placeholder="MM/AA" maxlength="5"
+                oninput="fmtExpiry(this); updateCardVisual(1)" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Cód. segurança</label>
+              <input class="form-input" id="c1-cvv" type="tel" placeholder="Ex: 123" maxlength="4" />
+              <div style="font-size:11px; color:var(--text-muted); margin-top:4px; display:flex; align-items:center; gap:3px;">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                O que é código de segurança?
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Nome impresso no cartão</label>
+            <input class="form-input" id="c1-name" type="text" placeholder="Digite o nome como está no cartão"
+              oninput="updateCardVisual(1)" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">CPF do titular do cartão</label>
+            <input class="form-input" id="c1-cpf" type="tel" placeholder="Apenas números (Ex: 555.111.222–00)" maxlength="14"
+              oninput="fmtCPF(this)" />
+          </div>
+
+          <div class="checkbox-row">
+            <input type="checkbox" id="c1-save" checked />
+            <label class="checkbox-label" for="c1-save">
+              Salvar cartão para compras futuras na sua carteira <a href="#">MagaluPay</a>
+            </label>
+          </div>
+
+          <button class="btn-primary" onclick="submitCard1Form()">Continuar para parcelamento</button>
+        </div>
+      </div>
+      <div>
+        <div class="sidebar-card">
+          <div class="sidebar-row">
+            <span style="color:var(--text-muted);">Subtotal:</span>
+            <span style="font-weight:600;">R$ 200,00</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════════
+       PAGE 3 — Informe o primeiro cartão (valor + parcelas)
+  ════════════════════════════════════════════════ -->
+  <div id="page-card1-value" class="page">
+    <div class="checkout-layout">
+      <div>
+        <div class="content-card">
+          <div class="page-header">
+            <button class="back-btn" onclick="goPage('card1-form')">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+            </button>
+            <div>
+              <h1 class="page-title">Informe o primeiro cartão</h1>
+            </div>
+          </div>
+
+          <!-- Saved card display -->
+          <div class="saved-card-row">
+            <div class="saved-card-info">
+              <span class="visa-badge" id="c1-brand-badge">VISA</span>
+              <span id="c1-display-name" style="font-size:14px; font-weight:500;">Visa ****</span>
+            </div>
+            <button class="alter-link" onclick="goPage('card1-form')">Trocar cartão</button>
+          </div>
+
+          <!-- Amount input (only for dual mode) -->
+          <div id="c1-amount-section">
+            <div class="form-group" style="margin-bottom:6px;">
+              <label class="form-label">Valor a pagar neste cartão</label>
+              <input class="form-input" id="c1-amount" type="text" value="R$ 20,00"
+                oninput="onCard1AmountInput()" onblur="formatCard1Amount()" />
+            </div>
+            <div class="amount-hint" id="c1-amount-hint">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              O valor mínimo em cada cartão é de R$ 20,00
+            </div>
+          </div>
+
+          <!-- Installments -->
+          <div class="installments-wrap" style="margin-top:20px;">
+            <div class="installments-label">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+              Ver mais opções
+            </div>
+            <select class="installments-select" id="c1-inst">
+              <option>Escolha o parcelamento</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="sidebar-card">
+          <div class="sidebar-row">
+            <span style="color:var(--text-muted);">Subtotal:</span>
+            <span style="font-weight:600;">R$ 200,00</span>
+          </div>
+          <div class="sidebar-btn-wrap">
+            <button class="btn-primary" onclick="submitCard1Value()">Continuar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════════
+       PAGE 4 — Informe o segundo cartão
+  ════════════════════════════════════════════════ -->
+  <div id="page-card2-form" class="page">
+    <div class="checkout-layout">
+      <div>
+        <div class="content-card">
+          <div class="page-header">
+            <button class="back-btn" onclick="goPage('card1-value')">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+            </button>
+            <div>
+              <h1 class="page-title">Informe o segundo cartão</h1>
+              <div class="page-subtitle">Valor restante: <strong id="c2-remaining-display">R$ 180,00</strong></div>
+            </div>
+          </div>
+
+          <!-- Card 2 visual -->
+          <div class="card-visual" style="background: linear-gradient(140deg, #1a237e 0%, #283593 35%, #303f9f 65%, #3f51b5 100%);">
+            <div class="card-chip"></div>
+            <div class="card-number" id="cv2-number">**** **** **** ****</div>
+            <div class="card-bottom">
+              <div class="card-name" id="cv2-name">NOME IMPRESSO NO CARTÃO</div>
+              <div class="card-expiry" id="cv2-expiry">MM/AA</div>
+            </div>
+          </div>
+
+          <!-- Card 2 form -->
+          <div class="form-group">
+            <label class="form-label">Número do cartão</label>
+            <input class="form-input" id="c2-number" type="tel" placeholder="0000 0000 0000 0000" maxlength="19"
+              oninput="fmtCard(this); updateCardVisual(2)" />
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Validade</label>
+              <input class="form-input" id="c2-expiry" type="tel" placeholder="MM/AA" maxlength="5"
+                oninput="fmtExpiry(this); updateCardVisual(2)" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Cód. segurança</label>
+              <input class="form-input" id="c2-cvv" type="tel" placeholder="Ex: 123" maxlength="4" />
+              <div style="font-size:11px; color:var(--text-muted); margin-top:4px; display:flex; align-items:center; gap:3px;">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                O que é código de segurança?
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Nome impresso no cartão</label>
+            <input class="form-input" id="c2-name" type="text" placeholder="Digite o nome como está no cartão"
+              oninput="updateCardVisual(2)" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">CPF do titular do cartão</label>
+            <input class="form-input" id="c2-cpf" type="tel" placeholder="Apenas números (Ex: 555.111.222–00)" maxlength="14"
+              oninput="fmtCPF(this)" />
+          </div>
+
+          <div class="checkbox-row">
+            <input type="checkbox" id="c2-save" checked />
+            <label class="checkbox-label" for="c2-save">
+              Salvar cartão para compras futuras na sua carteira <a href="#">MagaluPay</a>
+            </label>
+          </div>
+
+          <button class="btn-primary" onclick="submitCard2Form()">Continuar para parcelamento</button>
+        </div>
+      </div>
+      <div>
+        <div class="sidebar-card">
+          <div class="sidebar-row">
+            <span style="color:var(--text-muted);">Subtotal:</span>
+            <span style="font-weight:600;">R$ 200,00</span>
+          </div>
+          <div class="card-recap">
+            <div class="card-recap-header">
+              <span>Primeiro cartão</span>
+              <button class="alter-link" onclick="goPage('card1-form')">Trocar cartão</button>
+            </div>
+            <div class="card-recap-row">
+              <span class="visa-badge" id="c2-sidebar-badge">VISA</span>
+              <span id="c2-sidebar-c1name" style="font-size:13px;">Visa ****</span>
+              <span class="card-recap-amount" id="c2-sidebar-c1amt">R$ 20,00</span>
+            </div>
+            <div class="card-recap-inst" id="c2-sidebar-c1inst">1x de R$ 20,00 sem juros</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════════════
+       PAGE 5 — Revisão
+  ════════════════════════════════════════════════ -->
+  <div id="page-review" class="page">
+    <div class="checkout-layout">
+      <div>
+        <div class="content-card">
+          <div class="review-header">
+            <h1 class="page-title">Revisão</h1>
+            <button class="alter-link" onclick="goPage('methods')">Alterar sacola</button>
+          </div>
+
+          <!-- Delivery -->
+          <div class="review-section">
+            <div class="review-delivery">
+              <div>
+                <div style="font-weight:600; margin-bottom:2px;">Entrega 01 de 01</div>
+                <div style="font-size:13px; color:var(--text-muted);">Receba em até 5 dias úteis — fone de ouvido</div>
+              </div>
+              <span style="font-size:13px; font-weight:600; color:var(--success);">Grátis</span>
+            </div>
+
+            <div class="review-warning">
+              <span style="font-size:15px;">⚠️</span>
+              <span>Antes de continuar, <strong>revise se o endereço de entrega está correto.</strong>
+              <br><span style="font-size:12px; color:var(--text-muted); margin-top:4px; display:block;">Endereço para entrega: Avenida Paulista, 1000 – Bela Vista, São Paulo/SP</span></span>
+            </div>
+            <button class="alter-link" style="font-size:13px;">Alterar endereço</button>
+          </div>
+
+          <div class="divider"></div>
+
+          <!-- Payment recap -->
+          <div class="review-section">
+            <div class="review-section-header">
+              <div class="review-section-title">Pagamento</div>
+              <button class="alter-link" onclick="goPage('methods')">Alterar pagamento</button>
+            </div>
+            <div id="review-payment-content">
+              <!-- built dynamically by buildReview() -->
+            </div>
+          </div>
+
+          <button class="btn-primary btn-green" onclick="handlePay()">Concluir pedido</button>
+
+          <div style="font-size:11px; color:var(--text-muted); margin-top:16px; text-align:center; line-height:1.5;">
+            O valor da compra, mesmo dividido em parcelas, não poderá exceder o limite do seu cartão.<br>
+            Para mais informações, consulte a administradora do seu cartão.
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="sidebar-card">
+          <div style="font-size:13px; font-weight:600; color:var(--text-muted); margin-bottom:12px; text-transform:uppercase; letter-spacing:.4px;">Resumo do pedido</div>
+          <div class="sidebar-row">
+            <span style="color:var(--text-muted);">Produtos (1)</span>
+            <span>R$ 200,00</span>
+          </div>
+          <div class="sidebar-row">
+            <span style="color:var(--text-muted);">Frete</span>
+            <span style="color:var(--success); font-weight:600;">Grátis</span>
+          </div>
+          <div class="sidebar-row total">
+            <span>Total da sacola:</span>
+            <span>R$ 200,00</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <script>
     const TOTAL = 200;
+    const MIN_PER_CARD = 20;
 
-    // ── Radio toggle ──────────────────────────────────
-    function selectMethod(method) {
-      ['credit','pix','dual'].forEach(m => {
-        const rb = document.getElementById('rb-' + m);
-        const content = document.getElementById('content-' + m);
-        if (m === method) {
-          rb.setAttribute('aria-checked', 'true');
-          content.classList.add('open');
-        } else {
-          rb.setAttribute('aria-checked', 'false');
-          content.classList.remove('open');
-        }
-      });
-      // hide global pay button when dual is active (wizard has its own CTAs)
-      document.getElementById('pay-btn').style.display = method === 'dual' ? 'none' : '';
-      if (method === 'dual') dualGoStep('amount');
+    let mode = 'single'; // 'single' | 'dual'
+    let card1 = { last4: '****', amount: TOTAL, inst: 1 };
+    let card2 = { last4: '****', amount: 0, inst: 1 };
+
+    // ── Navigation ─────────────────────────────────────
+    function goPage(id) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.getElementById('page-' + id).classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // ── Dual wizard navigation ────────────────────────
-    function dualGoStep(step) {
-      ['amount','card1','confirm','card2'].forEach(s => {
-        document.getElementById('dual-step-' + s).style.display = s === step ? '' : 'none';
-      });
+    // ── Method selection ───────────────────────────────
+    function startPix() {
+      alert('Simulação Pix\n\nUm QR Code seria exibido aqui para pagamento instantâneo.\nValor: R$ 180,00 (com desconto de R$ 20,00)');
     }
 
-    function onAmt1Input() {
-      const input = document.getElementById('amt1-input');
-      const v = parseBRL(input.value);
-      const row = document.getElementById('amt1-confirm-row');
-      const btn = document.getElementById('btn-goto-card1');
-      const valid = v > 0 && v < TOTAL;
-      row.style.display = valid ? '' : 'none';
-      btn.style.display = valid ? '' : 'none';
-      if (valid) {
-        document.getElementById('amt1-live-display').textContent = fmtBRL(v) + '*';
+    function startSingle() {
+      mode = 'single';
+      goPage('card1-form');
+    }
+
+    function startDual() {
+      mode = 'dual';
+      goPage('card1-form');
+    }
+
+    // ── Card visual update ─────────────────────────────
+    function updateCardVisual(n) {
+      const num  = document.getElementById('c' + n + '-number').value;
+      const name = document.getElementById('c' + n + '-name').value;
+      const exp  = document.getElementById('c' + n + '-expiry').value;
+
+      document.getElementById('cv' + n + '-number').textContent =
+        num || '**** **** **** ****';
+      document.getElementById('cv' + n + '-name').textContent =
+        (name || 'NOME IMPRESSO NO CARTÃO').toUpperCase();
+      document.getElementById('cv' + n + '-expiry').textContent =
+        exp || 'MM/AA';
+    }
+
+    // ── Card 1 form submit ─────────────────────────────
+    function submitCard1Form() {
+      const raw  = document.getElementById('c1-number').value.replace(/\s/g, '');
+      const last4 = raw.slice(-4) || '****';
+      card1.last4 = last4;
+
+      // Update card1-value page displays
+      document.getElementById('c1-display-name').textContent = 'Visa ' + last4;
+      document.getElementById('c2-sidebar-c1name').textContent = 'Visa ' + last4;
+
+      if (mode === 'dual') {
+        // init amount input
+        document.getElementById('c1-amount').value = fmtBRL(MIN_PER_CARD);
+        document.getElementById('c1-amount-section').style.display = '';
+        updateCard1Installments(MIN_PER_CARD);
+        goPage('card1-value');
+      } else {
+        // single card: no amount split needed, show full installments
+        document.getElementById('c1-amount-section').style.display = 'none';
+        updateCard1Installments(TOTAL);
+        goPage('card1-value');
       }
     }
 
-    function formatAmt1Input() {
-      const input = document.getElementById('amt1-input');
-      const v = parseBRL(input.value);
-      if (v > 0) {
-        const clamped = Math.min(Math.max(v, 0.01), TOTAL - 0.01);
-        input.value = fmtBRL(clamped);
+    // ── Card 1 value ───────────────────────────────────
+    function onCard1AmountInput() {
+      const v = parseBRL(document.getElementById('c1-amount').value);
+      if (v >= MIN_PER_CARD && v <= TOTAL - MIN_PER_CARD) {
+        updateCard1Installments(v);
+        document.getElementById('c1-amount-hint').classList.remove('error');
+      } else {
+        document.getElementById('c1-amount-hint').classList.add('error');
       }
-      onAmt1Input();
     }
 
-    function syncConfirmAmounts() {
-      const v1 = parseBRL(document.getElementById('amt1-live-display').textContent);
-      const v2 = TOTAL - v1;
-      document.getElementById('confirm-amt1').textContent = fmtBRL(v1) + '*';
-      document.getElementById('confirm-amt2').textContent = fmtBRL(v2) + '*';
-      updateInstallments(v1, v2);
+    function formatCard1Amount() {
+      const input = document.getElementById('c1-amount');
+      const raw = parseBRL(input.value);
+      const clamped = Math.min(Math.max(raw, MIN_PER_CARD), TOTAL - MIN_PER_CARD);
+      input.value = fmtBRL(clamped);
+      document.getElementById('c1-amount-hint').classList.remove('error');
+      updateCard1Installments(clamped);
     }
 
-    // ── Helpers ───────────────────────────────────────
+    function updateCard1Installments(v) {
+      const s = document.getElementById('c1-inst');
+      const max = mode === 'dual' ? 6 : 12;
+      s.innerHTML = Array.from({ length: max }, (_, i) => i + 1)
+        .map(n => `<option value="${n}">${n}x de ${fmtBRL(v / n)} sem juros</option>`)
+        .join('');
+    }
+
+    function submitCard1Value() {
+      const v = parseBRL(document.getElementById('c1-amount').value);
+      const inst = parseInt(document.getElementById('c1-inst').value) || 1;
+
+      if (mode === 'single') {
+        card1.amount = TOTAL;
+        card1.inst = inst;
+        buildReview();
+        goPage('review');
+        return;
+      }
+
+      // dual
+      const clamped = Math.min(Math.max(v, MIN_PER_CARD), TOTAL - MIN_PER_CARD);
+      card1.amount = clamped;
+      card1.inst = inst;
+      card2.amount = TOTAL - clamped;
+
+      // update card2 page
+      document.getElementById('c2-remaining-display').textContent = fmtBRL(card2.amount);
+      document.getElementById('c2-sidebar-c1amt').textContent = fmtBRL(clamped);
+      document.getElementById('c2-sidebar-c1inst').textContent =
+        inst + 'x de ' + fmtBRL(clamped / inst) + ' sem juros';
+
+      goPage('card2-form');
+    }
+
+    // ── Card 2 form submit ─────────────────────────────
+    function submitCard2Form() {
+      const raw  = document.getElementById('c2-number').value.replace(/\s/g, '');
+      card2.last4 = raw.slice(-4) || '****';
+      card2.inst = 1; // default 1x for remaining amount
+      buildReview();
+      goPage('review');
+    }
+
+    // ── Review ─────────────────────────────────────────
+    function buildReview() {
+      const el = document.getElementById('review-payment-content');
+      if (mode === 'dual') {
+        el.innerHTML = `
+          <div class="review-payment-row">
+            <div class="review-payment-card">
+              <span class="visa-badge">VISA</span>
+              <span style="font-size:13px; font-weight:500;">Cartão final ${card1.last4}</span>
+            </div>
+            <div class="review-payment-amount">Valor total: ${fmtBRL(card1.amount)}</div>
+            <div class="review-payment-inst">${card1.inst}x de ${fmtBRL(card1.amount / card1.inst)} sem juros</div>
+          </div>
+          <div class="review-payment-row">
+            <div class="review-payment-card">
+              <span class="visa-badge">VISA</span>
+              <span style="font-size:13px; font-weight:500;">Cartão final ${card2.last4}</span>
+            </div>
+            <div class="review-payment-amount">Valor total: ${fmtBRL(card2.amount)}</div>
+            <div class="review-payment-inst">1x de ${fmtBRL(card2.amount)} sem juros</div>
+          </div>
+        `;
+      } else {
+        el.innerHTML = `
+          <div class="review-payment-row">
+            <div class="review-payment-card">
+              <span class="visa-badge">VISA</span>
+              <span style="font-size:13px; font-weight:500;">Cartão final ${card1.last4}</span>
+            </div>
+            <div class="review-payment-amount">Valor total: ${fmtBRL(TOTAL)}</div>
+            <div class="review-payment-inst">${card1.inst}x de ${fmtBRL(TOTAL / card1.inst)} sem juros</div>
+          </div>
+        `;
+      }
+    }
+
+    function handlePay() {
+      alert('✅ Simulação: pedido concluído!\n\n' + (mode === 'dual'
+        ? `Cartão 1 (final ${card1.last4}): ${fmtBRL(card1.amount)} em ${card1.inst}x\nCartão 2 (final ${card2.last4}): ${fmtBRL(card2.amount)} em 1x`
+        : `Cartão (final ${card1.last4}): ${fmtBRL(TOTAL)} em ${card1.inst}x`
+      ));
+    }
+
+    // ── Input masks & helpers ──────────────────────────
     function parseBRL(str) {
       return parseFloat((str || '').replace(/R\$\s*/,'').replace(/\./g,'').replace(',','.')) || 0;
     }
     function fmtBRL(n) {
-      return 'R$ ' + Math.max(0, n).toFixed(2).replace('.',',');
+      return 'R$ ' + Math.max(0, n).toFixed(2).replace('.', ',');
     }
-
-    function updateInstallments(v1, v2) {
-      const s1 = document.getElementById('inst1');
-      const s2 = document.getElementById('inst2');
-      s1.innerHTML = `<option>1x de ${fmtBRL(v1)}</option><option>2x de ${fmtBRL(v1/2)}</option>`;
-      s2.innerHTML = `<option>1x de ${fmtBRL(v2)}</option><option>2x de ${fmtBRL(v2/2)}</option>`;
-    }
-
-    // ── Input masks ───────────────────────────────────
     function fmtCard(el) {
-      let v = el.value.replace(/\D/g,'').substring(0,16);
-      el.value = v.replace(/(.{4})/g,'$1 ').trim();
+      let v = el.value.replace(/\D/g, '').substring(0, 16);
+      el.value = v.replace(/(.{4})/g, '$1 ').trim();
     }
     function fmtExpiry(el) {
-      let v = el.value.replace(/\D/g,'').substring(0,4);
-      if (v.length > 2) v = v.slice(0,2) + '/' + v.slice(2);
+      let v = el.value.replace(/\D/g, '').substring(0, 4);
+      if (v.length > 2) v = v.slice(0, 2) + '/' + v.slice(2);
       el.value = v;
     }
-
-    // ── Pay button ─────────────────────────────────────
-    function handlePay() {
-      const method = ['credit','pix','dual'].find(m =>
-        document.getElementById('rb-' + m).getAttribute('aria-checked') === 'true'
-      );
-      if (method === 'dual') {
-        const a1 = document.getElementById('confirm-amt1').textContent.replace('*','').trim();
-        const a2 = document.getElementById('confirm-amt2').textContent.replace('*','').trim();
-        alert('Simulação: pagamento com 2 cartões enviado!\nCartão 1: ' + a1 + '\nCartão 2: ' + a2);
-      } else {
-        alert('Simulação: pagamento via ' + method + ' enviado!');
-      }
+    function fmtCPF(el) {
+      let v = el.value.replace(/\D/g, '').substring(0, 11);
+      if      (v.length > 9) v = v.slice(0,3)+'.'+v.slice(3,6)+'.'+v.slice(6,9)+'-'+v.slice(9);
+      else if (v.length > 6) v = v.slice(0,3)+'.'+v.slice(3,6)+'.'+v.slice(6);
+      else if (v.length > 3) v = v.slice(0,3)+'.'+v.slice(3);
+      el.value = v;
     }
-
-    function toggleId() { /* placeholder for edit flow */ }
-
-    // init installments on load
-    updateInstallments(TOTAL / 2, TOTAL / 2);
   </script>
 </body>
 </html>
