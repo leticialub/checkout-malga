@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Checkout | Malga — Simulação 2 Cartões</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          borderRadius: { xl: '0.625rem' },
+          colors: {
+            card: 'var(--card)',
+            border: 'var(--border-solid)',
+            input: 'var(--input)',
+            primary: 'var(--primary)',
+            muted: 'var(--muted)',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    :root {
+      --background: #333333;
+      --foreground: #1a1a1a;
+      --card: #fafafa;
+      --card-foreground: #1a1a1a;
+      --border-solid: #e4e4e7;
+      --input-bg: #ebebeb;
+      --primary: #474747;
+      --primary-foreground: #fafafa;
+      --muted: #f4f4f5;
+      --muted-foreground: #71717a;
+      --ring: #6a6a6a;
+      --radius: 0.625rem;
+      --teal: #2DAD7E;
+      --teal-dark: #22956a;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--background);
+      color: var(--foreground);
+      min-height: 100vh;
+      margin: 0;
+    }
+
+    /* ── Card ──────────────────────────────────────────── */
+    .card {
+      background: var(--card);
+      color: var(--card-foreground);
+      border-radius: var(--radius);
+      border: 1px solid var(--border-solid);
+      box-shadow: 0 1px 3px rgba(0,0,0,.08);
+    }
+
+    /* ── Input ─────────────────────────────────────────── */
+    .input {
+      width: 100%;
+      height: 36px;
+      border: 1px solid var(--border-solid);
+      border-radius: calc(var(--radius) * 0.75);
+      background: transparent;
+      padding: 0 12px;
+      font-size: 14px;
+      font-family: inherit;
+      color: var(--foreground);
+      outline: none;
+      transition: border-color .15s, box-shadow .15s;
+    }
+    .input:focus {
+      border-color: var(--ring);
+      box-shadow: 0 0 0 3px rgba(106,106,106,.15);
+    }
+    .input::placeholder { color: var(--muted-foreground); }
+    select.input { cursor: pointer; appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2371717a' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 10px center; padding-right: 28px; }
+
+    /* ── Label ─────────────────────────────────────────── */
+    .field-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--foreground);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* ── Radio button ──────────────────────────────────── */
+    .radio-btn {
+      width: 16px; height: 16px; flex-shrink: 0;
+      border-radius: 50%;
+      border: 1px solid var(--border-solid);
+      background: transparent;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: border-color .15s, box-shadow .15s;
+      outline: none;
+      padding: 0;
+    }
+    .radio-btn:focus-visible { box-shadow: 0 0 0 3px rgba(106,106,106,.15); }
+    .radio-btn[aria-checked="true"] {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+    .radio-btn .dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--primary);
+      display: none;
+    }
+    .radio-btn[aria-checked="true"] .dot { display: block; }
+
+    /* ── Payment option row ────────────────────────────── */
+    .pay-label {
+      display: flex; align-items: center; gap: 8px;
+      justify-content: space-between;
+      width: 100%; padding: 24px 0;
+      font-size: 14px; font-weight: 500;
+      cursor: pointer; user-select: none;
+    }
+
+    /* ── Button ────────────────────────────────────────── */
+    .btn-primary {
+      width: 100%; height: 40px;
+      background: var(--primary);
+      color: var(--primary-foreground);
+      border: none; border-radius: calc(var(--radius) * 0.75);
+      font-size: 14px; font-weight: 500;
+      cursor: pointer; font-family: inherit;
+      transition: opacity .15s;
+    }
+    .btn-primary:hover { opacity: .88; }
+
+    .btn-teal {
+      width: 100%; height: 40px;
+      background: var(--teal);
+      color: #fff;
+      border: none; border-radius: calc(var(--radius) * 0.75);
+      font-size: 14px; font-weight: 500;
+      cursor: pointer; font-family: inherit;
+      transition: opacity .15s;
+    }
+    .btn-teal:hover { opacity: .88; }
+
+    /* ── Info banner ───────────────────────────────────── */
+    .info-banner {
+      background: var(--muted);
+      border-radius: calc(var(--radius) * 0.75);
+      padding: 10px 14px;
+      display: flex; align-items: flex-start; gap: 8px;
+      font-size: 12px; color: var(--muted-foreground);
+    }
+
+    /* ── Section separator inside card ────────────────── */
+    .card-section-sep {
+      font-size: 11px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: .06em;
+      color: var(--muted-foreground);
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border-solid);
+    }
+
+    /* ── Collapsible content ───────────────────────────── */
+    .pay-content { display: none; }
+    .pay-content.open { display: block; }
+
+    /* ── Identification card (collapsed) ───────────────── */
+    .id-card-info { font-size: 13px; color: var(--muted-foreground); line-height: 1.6; }
+
+    /* ── Dual progress bar ─────────────────────────────── */
+    .dual-progress-bar {
+      height: 4px;
+      border-radius: 2px;
+      background: var(--border-solid);
+      overflow: hidden;
+      margin-bottom: 5px;
+    }
+    .dual-progress-fill {
+      height: 100%;
+      background: var(--teal);
+      transition: width .3s ease;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Header -->
+  <header style="background:#1a1a1a; padding:16px 32px;">
+    <svg width="80" height="22" viewBox="0 0 80 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <text x="0" y="18" font-family="Inter,sans-serif" font-size="18" font-weight="700" fill="white">malga</text>
+    </svg>
+  </header>
+
+  <main style="max-width:1000px; margin:0 auto; padding:32px 24px; display:grid; grid-template-columns:minmax(0,1fr) 340px; gap:24px; align-items:start; box-sizing:border-box;">
+
+    <!-- LEFT COLUMN -->
+    <div style="display:flex; flex-direction:column; gap:16px;">
+
+      <!-- Identificação (collapsed) -->
+      <div class="card" style="padding:24px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+          <span style="font-size:16px; font-weight:600;">Identificação</span>
+          <button onclick="toggleId()" style="font-size:13px; font-weight:500; color:var(--primary); background:none; border:none; cursor:pointer; display:flex; align-items:center; gap:4px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            Editar
+          </button>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:4px 32px;" class="id-card-info">
+          <span>Leticia Teste</span>
+          <span>Avenida Paulista, 1000</span>
+          <span>leticia@teste.com</span>
+          <span>Bela Vista</span>
+          <span>(11) 99999-9999</span>
+          <span>São Paulo, SP</span>
+          <span>123.456.789-09</span>
+          <span>01310-100</span>
+        </div>
+      </div>
+
+      <!-- Pagamento -->
+      <div class="card" style="padding:24px;">
+        <h2 style="font-size:16px; font-weight:600; margin:0 0 20px;">Pagamento</h2>
+
+        <div style="display:grid; gap:12px;" id="payment-options">
+
+          <!-- ① Cartão de crédito -->
+          <div class="card" style="padding:0;" id="opt-credit">
+            <div style="padding:0 16px;">
+              <div style="display:flex; align-items:center; gap:12px;">
+                <button class="radio-btn" id="rb-credit" role="radio" aria-checked="true" onclick="selectMethod('credit')">
+                  <span class="dot"></span>
+                </button>
+                <label class="pay-label" onclick="selectMethod('credit')">
+                  <div style="display:flex; align-items:center; gap:8px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+                    Cartão de crédito
+                  </div>
+                </label>
+              </div>
+            </div>
+            <div class="pay-content open" id="content-credit" style="padding:0 16px 20px;">
+              <div style="display:flex; flex-direction:column; gap:12px;">
+                <div style="display:flex; flex-direction:column; gap:6px;">
+                  <label class="field-label">Número do cartão</label>
+                  <div style="position:relative;">
+                    <input class="input" type="tel" placeholder="1234 5678 9012 3456" maxlength="19" oninput="fmtCard(this)" style="padding-right:38px;" />
+                    <span style="position:absolute; right:10px; top:50%; transform:translateY(-50%); pointer-events:none; color:var(--muted-foreground);">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+                    </span>
+                  </div>
+                </div>
+                <div style="display:flex; gap:12px;">
+                  <div style="flex:1; display:flex; flex-direction:column; gap:6px;">
+                    <label class="field-label">Data de expiração</label>
+                    <input class="input" type="text" placeholder="MM/AA" maxlength="5" oninput="fmtExpiry(this)" />
+                  </div>
+                  <div style="flex:1; display:flex; flex-direction:column; gap:6px;">
+                    <label class="field-label">CVV</label>
+                    <input class="input" type="tel" placeholder="3 dígitos" maxlength="4" />
+                  </div>
+                </div>
+                <div style="display:flex; gap:12px;">
+                  <div style="flex:1; display:flex; flex-direction:column; gap:6px;">
+                    <label class="field-label">Nome do titular do cartão</label>
+                    <input class="input" type="text" placeholder="Nome no cartão" />
+                  </div>
+                  <div style="flex:1; display:flex; flex-direction:column; gap:6px;">
+                    <label class="field-label">Parcelamento</label>
+                    <select class="input">
+                      <option>1x de R$ 200,00</option>
+                      <option>2x de R$ 100,00</option>
+                      <option>3x de R$ 66,67</option>
+                      <option>4x de R$ 50,00</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ② Pix -->
+          <div class="card" style="padding:0;" id="opt-pix">
+            <div style="padding:0 16px;">
+              <div style="display:flex; align-items:center; gap:12px;">
+                <button class="radio-btn" id="rb-pix" role="radio" aria-checked="false" onclick="selectMethod('pix')">
+                  <span class="dot"></span>
+                </button>
+                <label class="pay-label" onclick="selectMethod('pix')">
+                  <div style="display:flex; align-items:center; gap:8px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>
+                    Pix
+                  </div>
+                </label>
+              </div>
+            </div>
+            <div class="pay-content" id="content-pix" style="padding:0 16px 20px;">
+              <div class="info-banner">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="16"/><line x1="8" x2="16" y1="12" y2="12"/></svg>
+                Após confirmar, um QR Code Pix será gerado. O pagamento é confirmado em segundos.
+              </div>
+            </div>
+          </div>
+
+          <!-- ③ Combinar dois cartões ───────────────────── -->
+          <div class="card" style="padding:0;" id="opt-dual">
+            <div style="padding:0 16px;">
+              <div style="display:flex; align-items:center; gap:12px;">
+                <button class="radio-btn" id="rb-dual" role="radio" aria-checked="false" onclick="selectMethod('dual')">
+                  <span class="dot"></span>
+                </button>
+                <label class="pay-label" onclick="selectMethod('dual')">
+                  <div style="display:flex; align-items:center; gap:6px;">
+                    <span style="position:relative; width:22px; height:16px; display:inline-flex;">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="position:absolute;left:0;top:0;"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="position:absolute;left:5px;top:4px;opacity:.55;"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+                    </span>
+                    Combinar dois cartões de crédito
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            <!-- Conteúdo expandido — wizard 2 passos -->
+            <div class="pay-content" id="content-dual" style="padding:0 16px 20px;">
+
+              <!-- Header da seção -->
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                <span style="font-size:14px; font-weight:600; color:var(--foreground);">Combinar dois cartões</span>
+                <button onclick="selectMethod('credit')" style="font-size:13px; font-weight:500; color:var(--teal); background:none; border:none; cursor:pointer; font-family:inherit; padding:0;">Mudar método</button>
+              </div>
+
+              <!-- Barra de progresso -->
+              <div style="margin-bottom:18px;">
+                <div class="dual-progress-bar">
+                  <div class="dual-progress-fill" id="dual-progress-fill" style="width:50%;"></div>
+                </div>
+                <span id="dual-step-label" style="font-size:12px; color:var(--muted-foreground);">Passo 1 de 2</span>
+              </div>
+
+              <!-- ── PASSO 1: Divisão + Dados do cartão 1 ── -->
+              <div id="dual-passo1">
+
+                <!-- Seção: divisão -->
+                <div style="font-size:13px; font-weight:600; color:var(--foreground); margin-bottom:12px;">Ajuste a divisão entre os cartões</div>
+
+                <div style="margin-bottom:16px;">
+                  <!-- Primeiro cartão -->
+                  <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 0; border-bottom:1px solid var(--border-solid);">
+                    <span style="font-size:14px; color:var(--foreground);">Primeiro cartão</span>
+                    <div style="display:flex; align-items:stretch; border:1px solid var(--border-solid); border-radius:calc(var(--radius)*0.75); overflow:hidden;">
+                      <span style="display:flex; align-items:center; padding:0 10px; font-size:13px; font-weight:500; color:var(--muted-foreground); background:var(--muted); border-right:1px solid var(--border-solid); white-space:nowrap;">R$</span>
+                      <input type="text" id="amt1-input"
+                        style="border:none; outline:none; padding:0 12px; width:90px; height:34px; font-size:14px; font-family:inherit; background:white; color:var(--foreground); text-align:right;"
+                        placeholder="0,00" oninput="onAmt1Input()" onblur="formatAmt1Input()" />
+                    </div>
+                  </div>
+                  <!-- Segundo cartão (auto) -->
+                  <div style="display:flex; align-items:center; justify-content:space-between; padding:12px 0; border-bottom:1px solid var(--border-solid);">
+                    <span style="font-size:14px; color:var(--foreground);">Segundo cartão</span>
+                    <div style="display:flex; align-items:stretch; border:1px solid var(--border-solid); border-radius:calc(var(--radius)*0.75); overflow:hidden;">
+                      <span style="display:flex; align-items:center; padding:0 10px; font-size:13px; font-weight:500; color:var(--muted-foreground); background:var(--muted); border-right:1px solid var(--border-solid); white-space:nowrap;">R$</span>
+                      <input type="text" id="amt2-display" readonly
+                        style="border:none; outline:none; padding:0 12px; width:90px; height:34px; font-size:14px; font-family:inherit; background:var(--muted); color:var(--muted-foreground); text-align:right; cursor:default;"
+                        value="100,00" />
+                    </div>
+                  </div>
+                  <!-- Total -->
+                  <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 0;">
+                    <span style="font-size:14px; font-weight:600;">Total a pagar</span>
+                    <span style="font-size:14px; font-weight:600;">R$ 200,00</span>
+                  </div>
+                </div>
+
+                <div style="height:1px; background:var(--border-solid); margin-bottom:16px;"></div>
+
+                <!-- Seção: dados do primeiro cartão -->
+                <div style="font-size:13px; font-weight:600; color:var(--foreground); margin-bottom:12px;">Dados do primeiro cartão</div>
+
+                <div style="display:flex; flex-direction:column; gap:12px; margin-bottom:16px;">
+                  <!-- Número do cartão -->
+                  <div style="display:flex; flex-direction:column; gap:6px;">
+                    <label class="field-label">Número do cartão</label>
+                    <div style="position:relative;">
+                      <input class="input" id="c1-number" type="tel" placeholder="1234 5678 9012 3456" maxlength="19" oninput="fmtCard(this)" style="padding-right:38px;" />
+                      <span style="position:absolute; right:10px; top:50%; transform:translateY(-50%); pointer-events:none; color:var(--muted-foreground);">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+                      </span>
+                    </div>
+                  </div>
+                  <!-- Expiração + CVV -->
+                  <div style="display:flex; gap:12px;">
+                    <div style="flex:1; display:flex; flex-direction:column; gap:6px;">
+                      <label class="field-label">Data de expiração</label>
+                      <input class="input" id="c1-expiry" type="text" placeholder="MM/AA" maxlength="5" oninput="fmtExpiry(this)" />
+                    </div>
+                    <div style="flex:1; display:flex; flex-direction:column; gap:6px;">
+                      <label class="field-label">CVV</label>
+                      <input class="input" id="c1-cvv" type="tel" placeholder="3 dígitos" maxlength="4" />
+                    </div>
+                  </div>
+                  <!-- Nome + Parcelamento -->
+                  <div style="display:flex; gap:12px;">
+                    <div style="flex:1; display:flex; flex-direction:column; gap:6px;">
+                      <label class="field-label">Nome do titular do cartão</label>
+                      <input class="input" id="c1-name" type="text" placeholder="Nome no cartão" />
+                    </div>
+                    <div style="flex:1; display:flex; flex-direction:column; gap:6px;">
+                      <label class="field-label">Parcelamento</label>
+                      <select class="input" id="c1-inst"></select>
+                    </div>
+                  </div>
+                </div>
+
+                <button class="btn-teal" onclick="dualSubmitPasso1()">Continuar para o segundo cartão</button>
+              </div>
+
+              <!-- ── PASSO 2: Recap cartão 1 + Dados cartão 2 ── -->
+              <div id="dual-passo2" style="display:none;">
+
+                <!-- Seção: primeiro cartão (recap) -->
+                <div style="font-size:13px; font-weight:600; color:var(--foreground); margin-bottom:10px;">Primeiro cartão</div>
+
+                <!-- Chip de recap -->
+                <div style="display:flex; align-items:center; gap:10px; padding:12px 14px; border:1px solid var(--border-solid); border-radius:var(--radius); margin-bottom:16px; background:var(--muted);">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0; color:var(--muted-foreground);"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+                  <div style="flex:1; min-width:0;">
+                    <div style="font-size:13px; font-weight:600; color:var(--foreground);" id="recap-card-name">•••• ****</div>
+                    <div style="font-size:12px; color:var(--muted-foreground);" id="recap-inst-text">1x de R$ 100,00 sem juros</div>
+                  </div>
+                  <span style="font-size:13px; font-weight:600; flex-shrink:0; color:var(--foreground);" id="recap-amount">R$ 100,00</span>
+                  <button onclick="dualGoPassoV3('passo1')" style="background:none; border:none; cursor:pointer; padding:4px; display:flex; align-items:center; color:var(--muted-foreground); flex-shrink:0;" title="Editar">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                  </button>
+                </div>
+
+                <div style="height:1px; background:var(--border-solid); margin-bottom:16px;"></div>
+
+                <!-- Header seção cartão 2 com valor -->
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                  <span style="font-size:13px; font-weight:600; color:var(--foreground);">Dados do segundo cartão</span>
+                  <span style="font-size:13px; font-weight:600; color:var(--foreground);" id="card2-amount-label">R$ 100,00</span>
+                </div>
+
+                <div style="display:flex; flex-direction:column; gap:12px; margin-bottom:16px;">
+                  <!-- Número do cartão -->
+                  <div style="display:flex; flex-direction:column; gap:6px;">
+                    <label class="field-label">Número do cartão</label>
+                    <div style="position:relative;">
+                      <input class="input" id="c2-number" type="tel" placeholder="1234 5678 9012 3456" maxlength="19" oninput="fmtCard(this)" style="padding-right:38px;" />
+                      <span style="position:absolute; right:10px; top:50%; transform:translateY(-50%); pointer-events:none; color:var(--muted-foreground);">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+                      </span>
+                    </div>
+                  </div>
+                  <!-- Expiração + CVV -->
+                  <div style="display:flex; gap:12px;">
+                    <div style="flex:1; display:flex; flex-direction:column; gap:6px;">
+                      <label class="field-label">Data de expiração</label>
+                      <input class="input" id="c2-expiry" type="text" placeholder="MM/AA" maxlength="5" oninput="fmtExpiry(this)" />
+                    </div>
+                    <div style="flex:1; display:flex; flex-direction:column; gap:6px;">
+                      <label class="field-label">CVV</label>
+                      <input class="input" id="c2-cvv" type="tel" placeholder="3 dígitos" maxlength="4" />
+                    </div>
+                  </div>
+                  <!-- Nome + Parcelamento -->
+                  <div style="display:flex; gap:12px;">
+                    <div style="flex:1; display:flex; flex-direction:column; gap:6px;">
+                      <label class="field-label">Nome do titular do cartão</label>
+                      <input class="input" id="c2-name" type="text" placeholder="Nome no cartão" />
+                    </div>
+                    <div style="flex:1; display:flex; flex-direction:column; gap:6px;">
+                      <label class="field-label">Parcelamento</label>
+                      <select class="input" id="c2-inst"></select>
+                    </div>
+                  </div>
+                </div>
+
+                <button class="btn-teal" onclick="handlePay()">Pagar R$ 200,00</button>
+
+                <!-- Footer -->
+                <div style="text-align:center; margin-top:14px; font-size:11px; color:var(--muted-foreground);">
+                  Powered by <strong style="font-weight:600;">malga</strong>
+                </div>
+              </div>
+
+            </div><!-- /content-dual -->
+          </div><!-- /opt-dual -->
+
+        </div><!-- /payment-options -->
+
+        <!-- Botão global (crédito / pix) -->
+        <div style="margin-top:20px;">
+          <button class="btn-primary" id="pay-btn" onclick="handlePay()">Pagar R$ 200,00</button>
+        </div>
+
+        <!-- Footer powered by malga (métodos não-dual) -->
+        <div id="powered-footer" style="text-align:center; margin-top:14px; font-size:11px; color:var(--muted-foreground);">
+          Powered by <strong style="font-weight:600;">malga</strong>
+        </div>
+      </div>
+    </div><!-- /left column -->
+
+    <!-- RIGHT COLUMN — Pedido -->
+    <div class="card" style="padding:24px; position:sticky; top:24px;">
+      <h2 style="font-size:15px; font-weight:600; margin:0 0 16px;">Pedido</h2>
+      <div style="display:flex; justify-content:space-between; font-size:14px; margin-bottom:4px;">
+        <span>fone de ouvido</span>
+        <span style="font-weight:500;">R$ 200,00</span>
+      </div>
+      <div style="font-size:12px; color:var(--muted-foreground); margin-bottom:20px;">Quantidade: 1</div>
+      <div style="border-top:1px solid var(--border-solid); padding-top:16px; display:flex; justify-content:space-between;">
+        <span style="font-weight:600;">Total</span>
+        <span style="font-weight:700; font-size:16px;">R$ 200,00</span>
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    const TOTAL = 200;
+
+    // Estado do fluxo dual
+    let v3Card1 = { last4: '****', amount: TOTAL / 2, inst: 1 };
+    let v3Card2 = { last4: '****', amount: TOTAL / 2, inst: 1 };
+
+    // ── Seleção de método ─────────────────────────────
+    function selectMethod(method) {
+      ['credit','pix','dual'].forEach(m => {
+        const rb = document.getElementById('rb-' + m);
+        const content = document.getElementById('content-' + m);
+        if (m === method) {
+          rb.setAttribute('aria-checked', 'true');
+          content.classList.add('open');
+        } else {
+          rb.setAttribute('aria-checked', 'false');
+          content.classList.remove('open');
+        }
+      });
+      const isDual = method === 'dual';
+      document.getElementById('pay-btn').style.display = isDual ? 'none' : '';
+      document.getElementById('powered-footer').style.display = isDual ? 'none' : '';
+      if (isDual) {
+        dualGoPassoV3('passo1');
+        const half = TOTAL / 2;
+        document.getElementById('amt1-input').value = fmtNum(half);
+        document.getElementById('amt2-display').value = fmtNum(half);
+        initC1Installments(half);
+      }
+    }
+
+    // ── Navegação entre passos ────────────────────────
+    function dualGoPassoV3(passo) {
+      document.getElementById('dual-passo1').style.display = passo === 'passo1' ? '' : 'none';
+      document.getElementById('dual-passo2').style.display = passo === 'passo2' ? '' : 'none';
+      const fill = document.getElementById('dual-progress-fill');
+      const label = document.getElementById('dual-step-label');
+      if (passo === 'passo1') {
+        fill.style.width = '50%';
+        label.textContent = 'Passo 1 de 2';
+      } else {
+        fill.style.width = '100%';
+        label.textContent = 'Passo 2 de 2';
+      }
+    }
+
+    // ── Parcelamento do cartão 1 ──────────────────────
+    function initC1Installments(v1) {
+      const max = 6;
+      document.getElementById('c1-inst').innerHTML =
+        Array.from({ length: max }, (_, i) => i + 1)
+          .map(n => `<option value="${n}">${n}x de ${fmtBRL(v1 / n)} sem juros</option>`)
+          .join('');
+    }
+
+    // ── Inputs de divisão ─────────────────────────────
+    function onAmt1Input() {
+      const v = parseBRL(document.getElementById('amt1-input').value);
+      if (v > 0 && v < TOTAL) {
+        document.getElementById('amt2-display').value = fmtNum(TOTAL - v);
+        initC1Installments(v);
+      } else {
+        document.getElementById('amt2-display').value = fmtNum(TOTAL);
+      }
+    }
+
+    function formatAmt1Input() {
+      const input = document.getElementById('amt1-input');
+      const v = parseBRL(input.value);
+      if (v > 0) {
+        const clamped = Math.min(Math.max(v, 0.01), TOTAL - 0.01);
+        input.value = fmtNum(clamped);
+        document.getElementById('amt2-display').value = fmtNum(TOTAL - clamped);
+        initC1Installments(clamped);
+      }
+    }
+
+    // ── Submeter passo 1 → passo 2 ────────────────────
+    function dualSubmitPasso1() {
+      const raw = document.getElementById('c1-number').value.replace(/\s/g, '');
+      v3Card1.last4 = raw.slice(-4) || '****';
+      v3Card1.inst = parseInt(document.getElementById('c1-inst').value) || 1;
+
+      const v1raw = parseBRL(document.getElementById('amt1-input').value);
+      const v1 = v1raw > 0 ? Math.min(Math.max(v1raw, 0.01), TOTAL - 0.01) : TOTAL / 2;
+      v3Card1.amount = v1;
+      v3Card2.amount = TOTAL - v1;
+
+      // Atualizar chip de recap
+      document.getElementById('recap-card-name').textContent = '•••• ' + v3Card1.last4;
+      document.getElementById('recap-inst-text').textContent =
+        v3Card1.inst + 'x de ' + fmtBRL(v3Card1.amount / v3Card1.inst) + ' sem juros';
+      document.getElementById('recap-amount').textContent = fmtBRL(v3Card1.amount);
+      document.getElementById('card2-amount-label').textContent = fmtBRL(v3Card2.amount);
+
+      // Parcelamento do cartão 2
+      document.getElementById('c2-inst').innerHTML =
+        Array.from({ length: 6 }, (_, i) => i + 1)
+          .map(n => `<option value="${n}">${n}x de ${fmtBRL(v3Card2.amount / n)} sem juros</option>`)
+          .join('');
+
+      dualGoPassoV3('passo2');
+    }
+
+    // ── Helpers ───────────────────────────────────────
+    function parseBRL(str) {
+      return parseFloat((str || '').replace(/R\$\s*/,'').replace(/\./g,'').replace(',','.')) || 0;
+    }
+    function fmtBRL(n) {
+      return 'R$ ' + Math.max(0, n).toFixed(2).replace('.',',');
+    }
+    function fmtNum(n) {
+      return Math.max(0, n).toFixed(2).replace('.',',');
+    }
+
+    // ── Máscaras ──────────────────────────────────────
+    function fmtCard(el) {
+      let v = el.value.replace(/\D/g,'').substring(0,16);
+      el.value = v.replace(/(.{4})/g,'$1 ').trim();
+    }
+    function fmtExpiry(el) {
+      let v = el.value.replace(/\D/g,'').substring(0,4);
+      if (v.length > 2) v = v.slice(0,2) + '/' + v.slice(2);
+      el.value = v;
+    }
+
+    // ── Finalizar pagamento ───────────────────────────
+    function handlePay() {
+      const method = ['credit','pix','dual'].find(m =>
+        document.getElementById('rb-' + m).getAttribute('aria-checked') === 'true'
+      );
+      if (method === 'dual') {
+        alert('Simulação: pagamento com 2 cartões enviado!\nCartão 1: ' + fmtBRL(v3Card1.amount) + '\nCartão 2: ' + fmtBRL(v3Card2.amount));
+      } else {
+        alert('Simulação: pagamento via ' + method + ' enviado!');
+      }
+    }
+
+    function toggleId() { /* placeholder */ }
+  </script>
+</body>
+</html>
