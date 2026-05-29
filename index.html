@@ -761,14 +761,19 @@
       const badgeEstornado  = `<span style="display:inline-flex; align-items:center; gap:4px; font-size:12px; font-weight:500; color:#404040; background:#f0f0f0; border-radius:9999px; padding:3px 10px; white-space:nowrap;">&#8617; Estornado</span>`;
       const badgeNaoCobrado = `<span style="display:inline-flex; align-items:center; gap:4px; font-size:12px; font-weight:500; color:#404040; background:#f0f0f0; border-radius:9999px; padding:3px 10px; white-space:nowrap;">&#8617; Estornado</span>`;
 
-      const cardRow = (idx, badge) =>
-        `<div style="display:flex; align-items:center; gap:12px; padding:12px 14px; border:1px solid var(--border-solid); border-radius:var(--radius);">
-          ${cardThumbnailHTML(successData.cards[idx].num)}
-          <div style="flex:1; min-width:0;">
-            <div style="font-size:13px; font-weight:600;">•••• ${successData.cards[idx].last4}</div>
-            <div style="font-size:12px; color:var(--muted-foreground);">${successData.cards[idx].instText}</div>
+      const declineReason = `Pagamento recusado por: saldo ou limite insuficiente. Use outro cartão ou tente novamente após ajustar seu limite.`;
+
+      const cardRow = (idx, badge, showReason = false) =>
+        `<div style="display:flex; flex-direction:column; border:1px solid var(--border-solid); border-radius:var(--radius); overflow:hidden;">
+          <div style="display:flex; align-items:center; gap:12px; padding:12px 14px;">
+            ${cardThumbnailHTML(successData.cards[idx].num)}
+            <div style="flex:1; min-width:0;">
+              <div style="font-size:13px; font-weight:600;">•••• ${successData.cards[idx].last4}</div>
+              <div style="font-size:12px; color:var(--muted-foreground);">${successData.cards[idx].instText}</div>
+            </div>
+            ${badge}
           </div>
-          ${badge}
+          ${showReason ? `<div style="border-top:1px solid var(--border-solid); padding:10px 14px; font-size:12px; color:var(--muted-foreground); line-height:18px;">${declineReason}</div>` : ''}
         </div>`;
 
       const declined = successData.declinedCard;
@@ -776,15 +781,15 @@
       if (successData.cards && successData.cards.length >= 2) {
         if (declined === 1) {
           // Card 1 declined before card 2 was attempted
-          rows.innerHTML = cardRow(0, badgeRecusado) + cardRow(1, badgeNaoCobrado);
+          rows.innerHTML = cardRow(0, badgeRecusado, true) + cardRow(1, badgeNaoCobrado);
           if (msgEl) msgEl.textContent = 'O primeiro cartão foi recusado e o pedido foi cancelado. Nenhum valor será cobrado.';
         } else {
           // Card 2 declined; card 1 was already authorized and will be reversed
-          rows.innerHTML = cardRow(0, badgeEstornado) + cardRow(1, badgeRecusado);
+          rows.innerHTML = cardRow(0, badgeEstornado) + cardRow(1, badgeRecusado, true);
           if (msgEl) msgEl.textContent = 'O segundo cartão foi recusado. O valor do primeiro cartão será estornado automaticamente.';
         }
       } else if (successData.cards && successData.cards.length === 1) {
-        rows.innerHTML = cardRow(0, badgeRecusado);
+        rows.innerHTML = cardRow(0, badgeRecusado, true);
         if (msgEl) msgEl.textContent = 'O cartão foi recusado e o pedido foi cancelado. Nenhum valor será cobrado.';
       } else {
         rows.innerHTML = '';
