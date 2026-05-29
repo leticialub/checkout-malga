@@ -27,7 +27,7 @@
     :root {
       --background: #FAFAFA;
       --foreground: #1a1a1a;
-      --card: #ffffff;
+      --card: #FAFAFA;
       --card-foreground: #1a1a1a;
       --border-solid: #e4e4e7;
       --input-bg: #ebebeb;
@@ -64,10 +64,10 @@
     .input {
       width: 100%;
       height: 36px;
-      border: 1px solid var(--border-solid);
-      border-radius: calc(var(--radius) * 0.75);
-      background: transparent;
-      padding: 0 12px;
+      border: 1px solid #e5e5e5;
+      border-radius: 8px;
+      background: #fafafa;
+      padding: 4px 12px;
       font-size: 14px;
       font-family: inherit;
       color: var(--foreground);
@@ -85,8 +85,9 @@
 
     /* ── Label ─────────────────────────────────────────── */
     .field-label {
-      font-size: 13px;
+      font-size: 14px;
       font-weight: 500;
+      line-height: 1;
       color: var(--foreground);
       display: flex;
       align-items: center;
@@ -128,10 +129,10 @@
 
     /* ── Button ────────────────────────────────────────── */
     .btn-primary {
-      width: 100%; height: 40px;
+      width: 100%; height: 36px;
       background: var(--primary);
       color: var(--primary-foreground);
-      border: none; border-radius: calc(var(--radius) * 0.75);
+      border: none; border-radius: 8px;
       font-size: 14px; font-weight: 500;
       cursor: pointer; font-family: inherit;
       transition: opacity .15s;
@@ -139,10 +140,10 @@
     .btn-primary:hover { opacity: .88; }
 
     .btn-teal {
-      width: 100%; height: 40px;
+      width: 100%; height: 36px;
       background: var(--teal);
       color: #fff;
-      border: none; border-radius: calc(var(--radius) * 0.75);
+      border: none; border-radius: 8px;
       font-size: 14px; font-weight: 500;
       cursor: pointer; font-family: inherit;
       transition: opacity .15s;
@@ -189,7 +190,7 @@
 
     /* ── Button disabled ──────────────────────────────── */
     .btn-primary:disabled, .btn-teal:disabled {
-      opacity: .38; cursor: not-allowed; pointer-events: none;
+      opacity: .5; cursor: not-allowed; pointer-events: none;
     }
 
     /* ── Loading modal ───────────────────────────────── */
@@ -271,14 +272,11 @@
     <div style="display:flex; flex-direction:column;">
 
       <!-- Identificação (collapsible) -->
-      <div id="id-card-wrap" style="overflow:hidden; max-height:400px; opacity:1; margin-bottom:16px; transition: max-height 0.4s ease, opacity 0.25s ease, margin-bottom 0.4s ease;">
+      <div id="id-card-wrap" style="overflow:hidden; max-height:400px; opacity:1; margin-bottom:16px; transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), margin-bottom 0.5s cubic-bezier(0.4, 0, 0.2, 1);">
       <div class="card" style="padding:24px;">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
-          <span style="font-size:16px; font-weight:600;">Identificação</span>
-          <button onclick="toggleId()" style="font-size:13px; font-weight:500; color:var(--primary); background:none; border:none; cursor:pointer; display:flex; align-items:center; gap:4px;">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-            Editar
-          </button>
+          <span style="font-size:20px; font-weight:600; line-height:28px; color:#737373;">Identificação</span>
+          <button onclick="toggleId()" style="font-size:12px; font-weight:500; color:#147f70; background:none; border:none; cursor:pointer; height:32px; padding:8px 12px; font-family:inherit;">Editar</button>
         </div>
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:4px 32px;" class="id-card-info">
           <span>Leticia Teste</span>
@@ -298,7 +296,7 @@
 
         <!-- ═══ VIEW: Seleção de método ═══ -->
         <div id="view-methods">
-          <h2 style="font-size:16px; font-weight:600; margin:0 0 20px;">Pagamento</h2>
+          <h2 style="font-size:20px; font-weight:600; line-height:28px; margin:0 0 20px;">Pagamento</h2>
 
           <div style="display:flex; flex-direction:column; gap:10px;">
 
@@ -341,19 +339,16 @@
 
         <!-- ═══ VIEW: Cartão de crédito ═══ -->
         <div id="view-credit" style="display:none;">
-          <!-- Cabeçalho com voltar -->
-          <div style="display:flex; align-items:center; gap:10px; margin-bottom:20px;">
-            <button onclick="goView('methods')" style="background:none; border:none; cursor:pointer; padding:4px; display:flex; align-items:center; color:var(--foreground); margin-left:-4px;">
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-            </button>
-            <span style="font-size:16px; font-weight:600;">Cartão de crédito</span>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <span style="font-size:20px; font-weight:600; line-height:28px;">Cartão de crédito</span>
+            <button onclick="goView('methods')" style="font-size:12px; font-weight:500; color:var(--primary); background:none; border:none; cursor:pointer; font-family:inherit; padding:0;">Pagar com outro método</button>
           </div>
           <div style="display:flex; flex-direction:column; gap:12px; margin-bottom:20px;">
             <div style="display:flex; flex-direction:column; gap:6px;">
               <label class="field-label">Número do cartão</label>
               <div style="position:relative;">
-                <input class="input" id="sc-num" type="tel" placeholder="1234 5678 9012 3456" maxlength="19" oninput="fmtCard(this); validateCredit()" style="padding-right:38px;" />
-                <span style="position:absolute; right:10px; top:50%; transform:translateY(-50%); pointer-events:none; color:var(--muted-foreground);">
+                <input class="input" id="sc-num" type="tel" placeholder="1234 5678 9012 3456" maxlength="19" oninput="fmtCard(this); validateCredit()" style="padding-left:38px;" />
+                <span style="position:absolute; left:10px; top:50%; transform:translateY(-50%); pointer-events:none; color:var(--muted-foreground);">
                   <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
                 </span>
               </div>
@@ -392,11 +387,9 @@
 
         <!-- ═══ VIEW: Pix ═══ -->
         <div id="view-pix" style="display:none;">
-          <div style="display:flex; align-items:center; gap:10px; margin-bottom:20px;">
-            <button onclick="goView('methods')" style="background:none; border:none; cursor:pointer; padding:4px; display:flex; align-items:center; color:var(--foreground); margin-left:-4px;">
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-            </button>
-            <span style="font-size:16px; font-weight:600;">Pix</span>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <span style="font-size:20px; font-weight:600; line-height:28px;">Pix</span>
+            <button onclick="goView('methods')" style="font-size:12px; font-weight:500; color:var(--primary); background:none; border:none; cursor:pointer; font-family:inherit; padding:0;">Pagar com outro método</button>
           </div>
           <div class="info-banner" style="margin-bottom:20px;">
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="16"/><line x1="8" x2="16" y1="12" y2="12"/></svg>
@@ -412,51 +405,51 @@
         <div id="view-dual" style="display:none;">
 
           <!-- Header -->
-          <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
-            <button onclick="goView('methods')" style="background:none; border:none; cursor:pointer; padding:4px; display:flex; align-items:center; color:var(--foreground); margin-left:-4px;">
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-            </button>
-            <span style="font-size:16px; font-weight:600; color:var(--foreground);">Combinar dois cartões</span>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+            <span style="font-size:20px; font-weight:600; line-height:28px; color:var(--foreground);">Combinar dois cartões</span>
+            <button onclick="goView('methods')" style="font-size:12px; font-weight:500; color:var(--primary); background:none; border:none; cursor:pointer; font-family:inherit; padding:0;">Pagar com outro método</button>
           </div>
 
           <!-- Barra de progresso -->
           <div style="margin-bottom:20px;">
             <div style="display:flex; gap:4px; margin-bottom:5px;">
-              <div id="prog-bar-1" style="flex:1; height:4px; border-radius:2px; background:var(--teal); transition:background .3s;"></div>
-              <div id="prog-bar-2" style="flex:1; height:4px; border-radius:2px; background:var(--border-solid); transition:background .3s;"></div>
+              <div id="prog-bar-1" style="flex:1; height:8px; border-radius:4px; background:var(--teal); transition:background .3s;"></div>
+              <div id="prog-bar-2" style="flex:1; height:8px; border-radius:4px; background:rgba(37,124,112,0.2); transition:background .3s;"></div>
             </div>
             <div id="dual-step-label" style="font-size:12px; color:var(--muted-foreground); display:flex; justify-content:flex-start;">Passo 1 de 2</div>
           </div>
 
           <!-- ── PASSO 1: Divisão + Dados cartão 1 ── -->
           <div id="dual-passo1">
-            <div style="font-size:13px; font-weight:600; color:var(--foreground); margin-bottom:12px;">Ajuste a divisão entre os cartões</div>
+            <div style="font-size:16px; font-weight:600; line-height:24px; color:var(--foreground); margin-bottom:12px;">Ajuste a divisão entre os cartões</div>
             <!-- Card com as linhas de divisão -->
-            <div style="border:1px solid var(--border-solid); border-radius:var(--radius); background:var(--card); margin-bottom:16px; overflow:hidden;">
-              <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 16px; border-bottom:1px solid var(--border-solid);">
+            <div style="border:1px solid var(--border-solid); border-radius:16px; background:var(--card); margin-bottom:16px; padding:16px 0; display:flex; flex-direction:column; gap:12px;">
+              <div style="display:flex; align-items:center; justify-content:space-between; padding:0 24px;">
                 <span style="font-size:14px; color:var(--foreground);">Primeiro cartão</span>
-                <div style="display:flex; align-items:stretch; border:1px solid var(--border-solid); border-radius:calc(var(--radius)*0.75); overflow:hidden;">
-                  <span style="display:flex; align-items:center; padding:0 10px; font-size:13px; font-weight:500; color:var(--muted-foreground); background:var(--muted); border-right:1px solid var(--border-solid); white-space:nowrap;">R$</span>
-                  <input type="text" id="amt1-input" style="border:none; outline:none; padding:0 12px; width:90px; height:34px; font-size:14px; font-family:inherit; background:white; color:var(--foreground); text-align:right;" placeholder="0,00" oninput="onAmt1Input()" onblur="formatAmt1Input()" />
+                <div id="amt1-wrap" style="display:flex; align-items:center; gap:4px; border:1px solid #e5e5e5; border-radius:8px; padding:4px 12px; background:#fafafa; height:36px; transition:border-color .15s;">
+                  <span style="font-size:14px; color:var(--muted-foreground); white-space:nowrap;">R$</span>
+                  <input type="text" id="amt1-input" style="border:none; outline:none; width:80px; font-size:14px; font-family:inherit; background:transparent; color:var(--foreground); text-align:right;" placeholder="0,00" oninput="onAmt1Input()" onblur="formatAmt1Input()" />
                 </div>
               </div>
-              <div style="display:flex; align-items:center; justify-content:space-between; padding:14px 16px;">
-                <span style="font-size:14px; color:var(--foreground);">Segundo cartão</span>
-                <div style="display:flex; align-items:stretch; border:1px solid var(--border-solid); border-radius:calc(var(--radius)*0.75); overflow:hidden;">
-                  <span style="display:flex; align-items:center; padding:0 10px; font-size:13px; font-weight:500; color:var(--muted-foreground); background:var(--muted); border-right:1px solid var(--border-solid); white-space:nowrap;">R$</span>
-                  <input type="text" id="amt2-display" readonly style="border:none; outline:none; padding:0 12px; width:90px; height:34px; font-size:14px; font-family:inherit; background:var(--muted); color:var(--muted-foreground); text-align:right; cursor:default;" value="100,00" />
+              <div id="amt1-error" style="display:none; font-size:12px; color:#ef4444; padding:0 24px; margin-top:-4px;">O valor mínimo por cartão é R$ 1,00</div>
+              <div style="height:1px; background:#e5e5e5;"></div>
+              <div style="display:flex; align-items:center; justify-content:space-between; padding:0 24px;">
+                <span style="font-size:14px; color:var(--foreground); opacity:0.5;">Segundo cartão</span>
+                <div style="display:flex; align-items:center; gap:4px; border:1px solid #e5e5e5; border-radius:8px; padding:4px 12px; background:#fafafa; height:36px; opacity:0.5;">
+                  <span style="font-size:14px; color:#737373; white-space:nowrap;">R$</span>
+                  <input type="text" id="amt2-display" readonly style="border:none; outline:none; width:80px; font-size:14px; font-family:inherit; background:transparent; color:#737373; text-align:right; cursor:default;" value="100,00" />
                 </div>
               </div>
             </div>
             <div style="height:1px; background:var(--border-solid); margin-bottom:16px;"></div>
-            <div style="font-size:13px; font-weight:600; color:var(--foreground); margin-bottom:12px;">Dados do primeiro cartão</div>
+            <div style="font-size:16px; font-weight:600; line-height:24px; color:var(--foreground); margin-bottom:12px;">Dados do primeiro cartão</div>
             <div style="border:1px solid var(--border-solid); border-radius:var(--radius); background:var(--card); padding:16px; margin-bottom:16px;">
               <div style="display:flex; flex-direction:column; gap:12px;">
                 <div style="display:flex; flex-direction:column; gap:6px;">
                   <label class="field-label">Número do cartão</label>
                   <div style="position:relative;">
-                    <input class="input" id="c1-number" type="tel" placeholder="1234 5678 9012 3456" maxlength="19" oninput="fmtCard(this); validatePasso1()" style="padding-right:38px;" />
-                    <span style="position:absolute; right:10px; top:50%; transform:translateY(-50%); pointer-events:none; color:var(--muted-foreground);">
+                    <input class="input" id="c1-number" type="tel" placeholder="1234 5678 9012 3456" maxlength="19" oninput="fmtCard(this); validatePasso1()" style="padding-left:38px;" />
+                    <span style="position:absolute; left:10px; top:50%; transform:translateY(-50%); pointer-events:none; color:var(--muted-foreground);">
                       <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
                     </span>
                   </div>
@@ -488,7 +481,7 @@
 
           <!-- ── PASSO 2: Recap cartão 1 + Dados cartão 2 ── -->
           <div id="dual-passo2" style="display:none;">
-            <div style="font-size:13px; font-weight:600; color:var(--foreground); margin-bottom:10px;">Primeiro cartão</div>
+            <div style="font-size:16px; font-weight:600; line-height:24px; color:var(--foreground); margin-bottom:10px;">Primeiro cartão</div>
             <div style="display:flex; align-items:center; gap:10px; padding:12px 14px; border:1px solid var(--border-solid); border-radius:var(--radius); margin-bottom:16px; background:var(--card);">
               <span id="recap-brand-icon" style="flex-shrink:0; width:28px; height:20px; display:flex; align-items:center; justify-content:center;"></span>
               <div style="flex:1; min-width:0;">
@@ -502,7 +495,7 @@
             </div>
             <div style="height:1px; background:var(--border-solid); margin-bottom:16px;"></div>
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-              <span style="font-size:13px; font-weight:600; color:var(--foreground);">Dados do segundo cartão</span>
+              <span style="font-size:16px; font-weight:600; line-height:24px; color:var(--foreground);">Dados do segundo cartão</span>
               <span style="font-size:13px; font-weight:600; color:var(--foreground);" id="card2-amount-label">R$ 100,00</span>
             </div>
             <div style="border:1px solid var(--border-solid); border-radius:var(--radius); background:var(--card); padding:16px; margin-bottom:16px;">
@@ -510,8 +503,8 @@
                 <div style="display:flex; flex-direction:column; gap:6px;">
                   <label class="field-label">Número do cartão</label>
                   <div style="position:relative;">
-                    <input class="input" id="c2-number" type="tel" placeholder="1234 5678 9012 3456" maxlength="19" oninput="fmtCard(this); validatePasso2()" style="padding-right:38px;" />
-                    <span style="position:absolute; right:10px; top:50%; transform:translateY(-50%); pointer-events:none; color:var(--muted-foreground);">
+                    <input class="input" id="c2-number" type="tel" placeholder="1234 5678 9012 3456" maxlength="19" oninput="fmtCard(this); validatePasso2()" style="padding-left:38px;" />
+                    <span style="position:absolute; left:10px; top:50%; transform:translateY(-50%); pointer-events:none; color:var(--muted-foreground);">
                       <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
                     </span>
                   </div>
@@ -590,15 +583,15 @@
 
     <!-- RIGHT COLUMN — Pedido -->
     <div class="card" style="padding:24px; position:sticky; top:24px;">
-      <h2 style="font-size:15px; font-weight:600; margin:0 0 16px;">Pedido</h2>
+      <h2 id="order-title" style="font-size:20px; font-weight:600; margin:0 0 16px;">Pedido</h2>
       <div style="display:flex; justify-content:space-between; font-size:14px; margin-bottom:4px;">
         <span>fone de ouvido</span>
         <span style="font-weight:500;">R$ 200,00</span>
       </div>
       <div style="font-size:12px; color:var(--muted-foreground); margin-bottom:20px;">Quantidade: 1</div>
       <div style="border-top:1px solid var(--border-solid); padding-top:16px; display:flex; justify-content:space-between;">
-        <span style="font-weight:600;">Total</span>
-        <span style="font-weight:700; font-size:16px;">R$ 200,00</span>
+        <span style="font-size:18px; font-weight:600; line-height:1;">Total</span>
+        <span style="font-size:18px; font-weight:600; line-height:1;">R$ 200,00</span>
       </div>
     </div>
 
@@ -654,16 +647,16 @@
         document.getElementById('view-' + v).style.display = v === view ? '' : 'none';
       });
 
-      // Colapsa/expande card de identificação
+      // Colapsa/expande card de identificação (some só no dual e sucesso)
       const idWrap = document.getElementById('id-card-wrap');
-      if (view === 'methods') {
-        idWrap.style.maxHeight = '400px';
-        idWrap.style.opacity = '1';
-        idWrap.style.marginBottom = '16px';
-      } else {
+      if (view === 'dual' || view === 'success') {
         idWrap.style.maxHeight = '0';
         idWrap.style.opacity = '0';
         idWrap.style.marginBottom = '0';
+      } else {
+        idWrap.style.maxHeight = '400px';
+        idWrap.style.opacity = '1';
+        idWrap.style.marginBottom = '16px';
       }
 
       if (view === 'dual') {
@@ -745,7 +738,7 @@
     function dualGoPassoV3(passo) {
       document.getElementById('dual-passo1').style.display = passo === 'passo1' ? '' : 'none';
       document.getElementById('dual-passo2').style.display = passo === 'passo2' ? '' : 'none';
-      const teal = 'var(--teal)', gray = 'var(--border-solid)';
+      const teal = 'var(--teal)', gray = 'rgba(37,124,112,0.2)';
       const label = document.getElementById('dual-step-label');
       if (passo === 'passo1') {
         document.getElementById('prog-bar-1').style.background = teal;
@@ -771,11 +764,20 @@
     }
 
     // ── Inputs de divisão ─────────────────────────────
+    const AMT_MIN = 1; // valor mínimo por cartão
+
+    function setAmt1Error(hasError) {
+      document.getElementById('amt1-error').style.display = hasError ? '' : 'none';
+      document.getElementById('amt1-wrap').style.borderColor = hasError ? '#ef4444' : '#e5e5e5';
+    }
+
     function onAmt1Input() {
       const v = parseBRL(document.getElementById('amt1-input').value);
+      const invalid = v > 0 && (v < AMT_MIN || v > TOTAL - AMT_MIN);
+      setAmt1Error(invalid);
       if (v > 0 && v < TOTAL) {
         document.getElementById('amt2-display').value = fmtNum(TOTAL - v);
-        initC1Installments(v);
+        if (!invalid) initC1Installments(v);
       } else {
         document.getElementById('amt2-display').value = fmtNum(TOTAL);
       }
@@ -785,11 +787,12 @@
       const input = document.getElementById('amt1-input');
       const v = parseBRL(input.value);
       if (v > 0) {
-        const clamped = Math.min(Math.max(v, 0.01), TOTAL - 0.01);
+        const clamped = Math.min(Math.max(v, AMT_MIN), TOTAL - AMT_MIN);
         input.value = fmtNum(clamped);
         document.getElementById('amt2-display').value = fmtNum(TOTAL - clamped);
         initC1Installments(clamped);
       }
+      setAmt1Error(false); // limpa erro ao sair do campo (valor foi ajustado)
     }
 
     // ── Submeter passo 1 → passo 2 ────────────────────
