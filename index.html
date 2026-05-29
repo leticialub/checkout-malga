@@ -26,19 +26,19 @@
   <style>
     :root {
       --background: #FAFAFA;
-      --foreground: #1a1a1a;
+      --foreground: #0a0a0a;
       --card: #FAFAFA;
-      --card-foreground: #1a1a1a;
-      --border-solid: #e4e4e7;
+      --card-foreground: #0a0a0a;
+      --border-solid: #e5e5e5;
       --input-bg: #ebebeb;
-      --primary: #257C70;
+      --primary: #147f70;
       --primary-foreground: #fafafa;
       --muted: #f4f4f5;
-      --muted-foreground: #71717a;
-      --ring: #257C70;
-      --radius: 0.625rem;
-      --teal: #257C70;
-      --teal-dark: #1d6460;
+      --muted-foreground: #737373;
+      --ring: #147f70;
+      --radius: 1rem;
+      --teal: #147f70;
+      --teal-dark: #0f6b5e;
     }
 
     * { box-sizing: border-box; }
@@ -57,7 +57,7 @@
       color: var(--card-foreground);
       border-radius: var(--radius);
       border: 1px solid var(--border-solid);
-      box-shadow: 0 1px 3px rgba(0,0,0,.08);
+      box-shadow: 0px 1px 0px 0px rgba(10,10,10,0.05);
     }
 
     /* ── Input ─────────────────────────────────────────── */
@@ -80,7 +80,7 @@
     }
     .input::placeholder { color: var(--muted-foreground); }
     select.input { cursor: pointer; appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2371717a' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23737373' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
       background-repeat: no-repeat; background-position: right 10px center; padding-right: 28px; }
 
     /* ── Label ─────────────────────────────────────────── */
@@ -178,9 +178,9 @@
     /* ── Method selection cards ────────────────────────── */
     .method-row {
       display: flex; align-items: center; justify-content: space-between;
-      padding: 14px 16px;
+      padding: 16px 24px;
       border: 1px solid var(--border-solid);
-      border-radius: var(--radius);
+      border-radius: 16px;
       background: var(--card);
       cursor: pointer;
       transition: background .15s, border-color .15s;
@@ -193,55 +193,14 @@
       opacity: .5; cursor: not-allowed; pointer-events: none;
     }
 
-    /* ── Loading modal ───────────────────────────────── */
+    /* ── Loading (inline view) ─────────────────────── */
     @keyframes spin { to { transform: rotate(360deg); } }
-
-    .modal-backdrop {
-      position: fixed; inset: 0;
-      background: rgba(0,0,0,.45);
-      display: flex; align-items: center; justify-content: center;
-      z-index: 9999;
-    }
-    .modal-backdrop.hidden { display: none; }
-
-    .modal-box {
-      background: #fff;
-      border-radius: 14px;
-      padding: 28px 28px 24px;
-      width: 400px; max-width: calc(100vw - 32px);
-      box-shadow: 0 24px 64px rgba(0,0,0,.18);
-    }
-
-    .spinner-lg {
-      width: 30px; height: 30px;
-      border-radius: 50%;
-      border: 2.5px solid #e4e4e7;
-      border-top-color: #1a1a1a;
-      animation: spin .75s linear infinite;
-      display: inline-block;
-      margin-bottom: 6px;
-    }
-    .spinner-sm {
-      width: 20px; height: 20px; flex-shrink: 0;
-      border-radius: 50%;
-      border: 2px solid #e4e4e7;
-      border-top-color: #1a1a1a;
-      animation: spin .75s linear infinite;
-    }
-    .step-done {
-      width: 20px; height: 20px; flex-shrink: 0; border-radius: 50%;
-      background: #22c55e;
-      display: inline-flex; align-items: center; justify-content: center;
-    }
-    .step-pending {
-      width: 20px; height: 20px; flex-shrink: 0; border-radius: 50%;
-      border: 2px solid #e4e4e7; display: inline-block;
-    }
+    .icon-spin { animation: spin .75s linear infinite; display: block; flex-shrink: 0; }
 
     /* ── Dual progress bar ─────────────────────────────── */
     .dual-progress-bar {
       height: 4px;
-      border-radius: 2px;
+      border-radius: 9999px;
       background: var(--border-solid);
       overflow: hidden;
       margin-bottom: 5px;
@@ -256,20 +215,22 @@
 
 <body>
   <!-- Header -->
-  <header style="background:#FAFAFA; padding:16px 32px; border-bottom:1px solid var(--border-solid);">
-    <svg width="72" height="29" viewBox="0 0 72 29" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M15.3435 4.93724C13.4796 4.93724 12.0437 5.88451 11.1882 7.50411C10.5771 5.79325 9.06233 4.93724 7.07596 4.93724C5.45636 4.93724 4.20413 5.70141 3.37873 7.0761V5.31697H0V20.1836H3.37873V11.9037C3.37873 9.3068 4.41784 7.96214 6.09807 7.96214C7.65645 7.96214 8.3588 8.92766 8.3588 10.8828V20.1836H11.6769L11.585 11.4145C11.585 8.90941 12.7154 7.96155 14.3044 7.96155C15.8015 7.96155 16.5045 8.92707 16.5045 10.8822V20.183H19.9138L19.8526 9.94734C19.8526 6.61806 18.1541 4.93724 15.3435 4.93724Z" fill="#171717"/>
-      <path d="M28.4475 4.98066C25.0959 4.98066 22.2629 7.02179 22.4454 10.7084L25.5833 10.9522C25.4309 9.03289 26.4976 7.81363 28.5388 7.81363C30.3668 7.81363 31.433 8.78857 31.433 10.0991V10.6472L28.0207 11.2259C24.2734 11.8352 22.4148 13.4195 22.4148 16.2531C22.4148 18.4467 24.0903 20.6403 27.442 20.6403C29.3006 20.6403 30.7324 19.7266 31.433 18.4773V20.1835H34.5709V10.2816C34.5715 7.02179 32.3773 4.98066 28.4475 4.98066ZM31.433 13.9682C31.433 16.1618 30.0618 17.6242 28.0813 17.6242C26.5889 17.6242 25.5828 16.9236 25.5828 15.8569C25.5828 14.6382 26.6796 14.0895 28.5076 13.7545L31.4324 13.267V13.9682H31.433Z" fill="#171717"/>
-      <path d="M37.5222 1.33514e-05V20.1835H40.8733V1.33514e-05H37.5222Z" fill="#171717"/>
-      <path d="M65.1189 4.98066C61.7673 4.98066 58.9343 7.02179 59.1168 10.7084L62.2547 10.9522C62.1022 9.03289 63.1684 7.81363 65.2102 7.81363C67.0382 7.81363 68.1044 8.78857 68.1044 10.0991V10.6472L64.6921 11.2259C60.9442 11.8352 59.0862 13.4195 59.0862 16.2531C59.0862 18.4467 60.7617 20.6403 64.1134 20.6403C65.972 20.6403 67.4038 19.7266 68.1049 18.4773V20.1835H71.2429V10.2816C71.2429 7.02179 69.0493 4.98066 65.1189 4.98066ZM68.1049 13.9682C68.1049 16.1618 66.7338 17.6242 64.7533 17.6242C63.2603 17.6242 62.2547 16.9236 62.2547 15.8569C62.2547 14.6382 63.3515 14.0895 65.1795 13.7545L68.1044 13.267V13.9682H68.1049Z" fill="#171717"/>
-      <path d="M52.7642 18.73H47.4944C46.5854 18.73 46.0338 18.2366 46.0338 17.645C46.0338 16.9544 46.5531 16.527 47.3973 16.527H50.5888C53.7379 16.527 56.3348 14.0284 56.3348 10.9052C56.3348 9.68885 55.978 8.70213 55.2309 7.78195L58.0162 7.91736L58.0233 5.31575H54.5498C53.2516 5.31575 52.375 5.16033 51.4489 5.0885C50.9968 5.01727 50.5199 4.98018 50.0224 4.98018C45.9378 4.98018 43.7065 7.24738 43.7065 10.7733C43.7065 12.417 44.4207 13.7652 45.6223 14.8832C44.0315 15.1464 42.9277 16.4616 42.9277 17.7433C42.9277 18.6964 43.3498 19.6172 44.2588 20.1759C42.9277 21.0967 42.3436 22.346 42.3436 23.9238C42.3436 26.6525 44.4536 28.5924 48.3817 28.5924H51.9853C55.4918 28.5924 58.0886 26.5866 58.0886 23.4634C58.0881 20.6699 56.0104 18.73 52.7642 18.73ZM50.0048 7.67421C52.2255 7.67421 52.9914 9.15369 52.9914 10.8063C52.9914 12.4588 52.1495 13.9383 50.0048 13.9383C47.86 13.9383 47.0182 12.4588 47.0182 10.8063C47.0182 9.15428 47.7841 7.67421 50.0048 7.67421ZM52.1472 25.8313H48.414C46.6614 25.8313 45.7842 24.8781 45.7842 23.6612C45.7842 22.7074 46.1739 21.4582 48.2515 21.4582H52.2119C53.7379 21.4582 54.6793 22.28 54.6793 23.5293C54.6793 24.9764 53.6732 25.8313 52.1472 25.8313Z" fill="#171717"/>
-    </svg>
+  <header style="background:#FAFAFA; height:64px; border-bottom:1px solid var(--border-solid); display:flex; align-items:center; padding:0 24px;">
+    <div style="max-width:1280px; width:100%; margin:0 auto; display:flex; align-items:center;">
+      <svg width="71" height="28.6" viewBox="0 0 72 29" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M15.3435 4.93724C13.4796 4.93724 12.0437 5.88451 11.1882 7.50411C10.5771 5.79325 9.06233 4.93724 7.07596 4.93724C5.45636 4.93724 4.20413 5.70141 3.37873 7.0761V5.31697H0V20.1836H3.37873V11.9037C3.37873 9.3068 4.41784 7.96214 6.09807 7.96214C7.65645 7.96214 8.3588 8.92766 8.3588 10.8828V20.1836H11.6769L11.585 11.4145C11.585 8.90941 12.7154 7.96155 14.3044 7.96155C15.8015 7.96155 16.5045 8.92707 16.5045 10.8822V20.183H19.9138L19.8526 9.94734C19.8526 6.61806 18.1541 4.93724 15.3435 4.93724Z" fill="#171717"/>
+        <path d="M28.4475 4.98066C25.0959 4.98066 22.2629 7.02179 22.4454 10.7084L25.5833 10.9522C25.4309 9.03289 26.4976 7.81363 28.5388 7.81363C30.3668 7.81363 31.433 8.78857 31.433 10.0991V10.6472L28.0207 11.2259C24.2734 11.8352 22.4148 13.4195 22.4148 16.2531C22.4148 18.4467 24.0903 20.6403 27.442 20.6403C29.3006 20.6403 30.7324 19.7266 31.433 18.4773V20.1835H34.5709V10.2816C34.5715 7.02179 32.3773 4.98066 28.4475 4.98066ZM31.433 13.9682C31.433 16.1618 30.0618 17.6242 28.0813 17.6242C26.5889 17.6242 25.5828 16.9236 25.5828 15.8569C25.5828 14.6382 26.6796 14.0895 28.5076 13.7545L31.4324 13.267V13.9682H31.433Z" fill="#171717"/>
+        <path d="M37.5222 1.33514e-05V20.1835H40.8733V1.33514e-05H37.5222Z" fill="#171717"/>
+        <path d="M65.1189 4.98066C61.7673 4.98066 58.9343 7.02179 59.1168 10.7084L62.2547 10.9522C62.1022 9.03289 63.1684 7.81363 65.2102 7.81363C67.0382 7.81363 68.1044 8.78857 68.1044 10.0991V10.6472L64.6921 11.2259C60.9442 11.8352 59.0862 13.4195 59.0862 16.2531C59.0862 18.4467 60.7617 20.6403 64.1134 20.6403C65.972 20.6403 67.4038 19.7266 68.1049 18.4773V20.1835H71.2429V10.2816C71.2429 7.02179 69.0493 4.98066 65.1189 4.98066ZM68.1049 13.9682C68.1049 16.1618 66.7338 17.6242 64.7533 17.6242C63.2603 17.6242 62.2547 16.9236 62.2547 15.8569C62.2547 14.6382 63.3515 14.0895 65.1795 13.7545L68.1044 13.267V13.9682H68.1049Z" fill="#171717"/>
+        <path d="M52.7642 18.73H47.4944C46.5854 18.73 46.0338 18.2366 46.0338 17.645C46.0338 16.9544 46.5531 16.527 47.3973 16.527H50.5888C53.7379 16.527 56.3348 14.0284 56.3348 10.9052C56.3348 9.68885 55.978 8.70213 55.2309 7.78195L58.0162 7.91736L58.0233 5.31575H54.5498C53.2516 5.31575 52.375 5.16033 51.4489 5.0885C50.9968 5.01727 50.5199 4.98018 50.0224 4.98018C45.9378 4.98018 43.7065 7.24738 43.7065 10.7733C43.7065 12.417 44.4207 13.7652 45.6223 14.8832C44.0315 15.1464 42.9277 16.4616 42.9277 17.7433C42.9277 18.6964 43.3498 19.6172 44.2588 20.1759C42.9277 21.0967 42.3436 22.346 42.3436 23.9238C42.3436 26.6525 44.4536 28.5924 48.3817 28.5924H51.9853C55.4918 28.5924 58.0886 26.5866 58.0886 23.4634C58.0881 20.6699 56.0104 18.73 52.7642 18.73ZM50.0048 7.67421C52.2255 7.67421 52.9914 9.15369 52.9914 10.8063C52.9914 12.4588 52.1495 13.9383 50.0048 13.9383C47.86 13.9383 47.0182 12.4588 47.0182 10.8063C47.0182 9.15428 47.7841 7.67421 50.0048 7.67421ZM52.1472 25.8313H48.414C46.6614 25.8313 45.7842 24.8781 45.7842 23.6612C45.7842 22.7074 46.1739 21.4582 48.2515 21.4582H52.2119C53.7379 21.4582 54.6793 22.28 54.6793 23.5293C54.6793 24.9764 53.6732 25.8313 52.1472 25.8313Z" fill="#171717"/>
+      </svg>
+    </div>
   </header>
 
-  <main style="max-width:1000px; margin:0 auto; padding:32px 24px; display:grid; grid-template-columns:minmax(0,1fr) 340px; gap:24px; align-items:start; box-sizing:border-box;">
+  <main style="max-width:1280px; margin:0 auto; padding:32px 24px; display:grid; grid-template-columns:repeat(12,1fr); column-gap:16px; align-items:start; box-sizing:border-box;">
 
     <!-- LEFT COLUMN -->
-    <div style="display:flex; flex-direction:column;">
+    <div style="grid-column: 2 / 7; display:flex; flex-direction:column;">
 
       <!-- Identificação (collapsible) -->
       <div id="id-card-wrap" style="overflow:hidden; max-height:400px; opacity:1; margin-bottom:16px; transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), margin-bottom 0.5s cubic-bezier(0.4, 0, 0.2, 1);">
@@ -278,7 +239,7 @@
           <span style="font-size:20px; font-weight:600; line-height:28px; color:#737373;">Identificação</span>
           <button onclick="toggleId()" style="font-size:12px; font-weight:500; color:#147f70; background:none; border:none; cursor:pointer; height:32px; padding:8px 12px; font-family:inherit;">Editar</button>
         </div>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:4px 32px;" class="id-card-info">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:4px 24px;" class="id-card-info">
           <span>Leticia Teste</span>
           <span>Avenida Paulista, 1000</span>
           <span>leticia@teste.com</span>
@@ -292,7 +253,7 @@
       </div><!-- /id-card-wrap -->
 
       <!-- Pagamento -->
-      <div class="card" style="padding:24px;" id="payment-card">
+      <div class="card" style="padding:24px; position:relative;" id="payment-card">
 
         <!-- ═══ VIEW: Seleção de método ═══ -->
         <div id="view-methods">
@@ -302,7 +263,7 @@
 
             <!-- Cartão de crédito -->
             <div class="method-row" onclick="goView('credit')">
-              <div style="display:flex; align-items:center; gap:12px;">
+              <div style="display:flex; align-items:center; gap:10px;">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0; color:var(--foreground);"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
                 <span style="font-size:14px; font-weight:500;">Cartão de crédito</span>
               </div>
@@ -311,16 +272,25 @@
 
             <!-- Pix -->
             <div class="method-row" onclick="goView('pix')">
-              <div style="display:flex; align-items:center; gap:12px;">
+              <div style="display:flex; align-items:center; gap:10px;">
                 <img src="pix.svg" width="18" height="18" style="flex-shrink:0;" />
                 <span style="font-size:14px; font-weight:500;">Pix</span>
               </div>
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--muted-foreground);flex-shrink:0;"><polyline points="9 18 15 12 9 6"/></svg>
             </div>
 
+            <!-- Boleto Bancário -->
+            <div class="method-row" onclick="goView('boleto')">
+              <div style="display:flex; align-items:center; gap:10px;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="6" y1="9" x2="6" y2="15"/><line x1="10" y1="9" x2="10" y2="15"/><line x1="14" y1="9" x2="14" y2="15"/><line x1="18" y1="9" x2="18" y2="15"/></svg>
+                <span style="font-size:14px; font-weight:500;">Boleto</span>
+              </div>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--muted-foreground);flex-shrink:0;"><polyline points="9 18 15 12 9 6"/></svg>
+            </div>
+
             <!-- Combinar dois cartões -->
             <div class="method-row" onclick="goView('dual')">
-              <div style="display:flex; align-items:center; gap:12px;">
+              <div style="display:flex; align-items:center; gap:10px;">
                 <img src="dual-card.svg" width="20" height="20" style="flex-shrink:0;" />
                 <span style="font-size:14px; font-weight:500;">Combinar dois cartões de crédito</span>
               </div>
@@ -329,8 +299,17 @@
 
           </div>
 
-          <div style="text-align:center; margin-top:20px; font-size:11px; color:var(--muted-foreground);">
-            Powered by <strong style="font-weight:600;">malga</strong>
+          <div style="display:flex; justify-content:center; margin-top:20px;">
+            <div style="display:inline-flex; align-items:center; gap:6px; border:1px solid #e5e5e5; border-radius:8px; padding:2px 8px; width:133px; justify-content:center;">
+              <span style="font-size:12px; font-weight:300; color:#737373;">Powered by</span>
+              <svg width="34" height="13" viewBox="0 0 72 29" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M15.3435 4.93724C13.4796 4.93724 12.0437 5.88451 11.1882 7.50411C10.5771 5.79325 9.06233 4.93724 7.07596 4.93724C5.45636 4.93724 4.20413 5.70141 3.37873 7.0761V5.31697H0V20.1836H3.37873V11.9037C3.37873 9.3068 4.41784 7.96214 6.09807 7.96214C7.65645 7.96214 8.3588 8.92766 8.3588 10.8828V20.1836H11.6769L11.585 11.4145C11.585 8.90941 12.7154 7.96155 14.3044 7.96155C15.8015 7.96155 16.5045 8.92707 16.5045 10.8822V20.183H19.9138L19.8526 9.94734C19.8526 6.61806 18.1541 4.93724 15.3435 4.93724Z" fill="#171717"/>
+                <path d="M28.4475 4.98066C25.0959 4.98066 22.2629 7.02179 22.4454 10.7084L25.5833 10.9522C25.4309 9.03289 26.4976 7.81363 28.5388 7.81363C30.3668 7.81363 31.433 8.78857 31.433 10.0991V10.6472L28.0207 11.2259C24.2734 11.8352 22.4148 13.4195 22.4148 16.2531C22.4148 18.4467 24.0903 20.6403 27.442 20.6403C29.3006 20.6403 30.7324 19.7266 31.433 18.4773V20.1835H34.5709V10.2816C34.5715 7.02179 32.3773 4.98066 28.4475 4.98066ZM31.433 13.9682C31.433 16.1618 30.0618 17.6242 28.0813 17.6242C26.5889 17.6242 25.5828 16.9236 25.5828 15.8569C25.5828 14.6382 26.6796 14.0895 28.5076 13.7545L31.4324 13.267V13.9682H31.433Z" fill="#171717"/>
+                <path d="M37.5222 1.33514e-05V20.1835H40.8733V1.33514e-05H37.5222Z" fill="#171717"/>
+                <path d="M65.1189 4.98066C61.7673 4.98066 58.9343 7.02179 59.1168 10.7084L62.2547 10.9522C62.1022 9.03289 63.1684 7.81363 65.2102 7.81363C67.0382 7.81363 68.1044 8.78857 68.1044 10.0991V10.6472L64.6921 11.2259C60.9442 11.8352 59.0862 13.4195 59.0862 16.2531C59.0862 18.4467 60.7617 20.6403 64.1134 20.6403C65.972 20.6403 67.4038 19.7266 68.1049 18.4773V20.1835H71.2429V10.2816C71.2429 7.02179 69.0493 4.98066 65.1189 4.98066ZM68.1049 13.9682C68.1049 16.1618 66.7338 17.6242 64.7533 17.6242C63.2603 17.6242 62.2547 16.9236 62.2547 15.8569C62.2547 14.6382 63.3515 14.0895 65.1795 13.7545L68.1044 13.267V13.9682H68.1049Z" fill="#171717"/>
+                <path d="M52.7642 18.73H47.4944C46.5854 18.73 46.0338 18.2366 46.0338 17.645C46.0338 16.9544 46.5531 16.527 47.3973 16.527H50.5888C53.7379 16.527 56.3348 14.0284 56.3348 10.9052C56.3348 9.68885 55.978 8.70213 55.2309 7.78195L58.0162 7.91736L58.0233 5.31575H54.5498C53.2516 5.31575 52.375 5.16033 51.4489 5.0885C50.9968 5.01727 50.5199 4.98018 50.0224 4.98018C45.9378 4.98018 43.7065 7.24738 43.7065 10.7733C43.7065 12.417 44.4207 13.7652 45.6223 14.8832C44.0315 15.1464 42.9277 16.4616 42.9277 17.7433C42.9277 18.6964 43.3498 19.6172 44.2588 20.1759C42.9277 21.0967 42.3436 22.346 42.3436 23.9238C42.3436 26.6525 44.4536 28.5924 48.3817 28.5924H51.9853C55.4918 28.5924 58.0886 26.5866 58.0886 23.4634C58.0881 20.6699 56.0104 18.73 52.7642 18.73ZM50.0048 7.67421C52.2255 7.67421 52.9914 9.15369 52.9914 10.8063C52.9914 12.4588 52.1495 13.9383 50.0048 13.9383C47.86 13.9383 47.0182 12.4588 47.0182 10.8063C47.0182 9.15428 47.7841 7.67421 50.0048 7.67421ZM52.1472 25.8313H48.414C46.6614 25.8313 45.7842 24.8781 45.7842 23.6612C45.7842 22.7074 46.1739 21.4582 48.2515 21.4582H52.2119C53.7379 21.4582 54.6793 22.28 54.6793 23.5293C54.6793 24.9764 53.6732 25.8313 52.1472 25.8313Z" fill="#171717"/>
+              </svg>
+            </div>
           </div>
         </div>
 
@@ -340,8 +319,8 @@
             <span style="font-size:20px; font-weight:600; line-height:28px;">Cartão de crédito</span>
             <button onclick="goView('methods')" style="font-size:12px; font-weight:500; color:var(--primary); background:none; border:none; cursor:pointer; font-family:inherit; padding:0;">Pagar com outro método</button>
           </div>
-          <div style="display:flex; flex-direction:column; gap:12px; margin-bottom:20px;">
-            <div style="display:flex; flex-direction:column; gap:6px;">
+          <div style="display:flex; flex-direction:column; gap:20px; margin-bottom:20px;">
+            <div style="display:flex; flex-direction:column; gap:8px;">
               <label class="field-label">Número do cartão</label>
               <div style="position:relative;">
                 <input class="input" id="sc-num" type="tel" placeholder="1234 5678 9012 3456" maxlength="19" oninput="fmtCard(this); validateCredit()" style="padding-left:38px;" />
@@ -351,23 +330,24 @@
               </div>
             </div>
             <div style="display:flex; gap:12px;">
-              <div style="flex:1; display:flex; flex-direction:column; gap:6px;">
+              <div style="flex:1; display:flex; flex-direction:column; gap:8px;">
                 <label class="field-label">Data de expiração</label>
                 <input class="input" id="sc-exp" type="text" placeholder="MM/AA" maxlength="5" oninput="fmtExpiry(this); validateCredit()" />
               </div>
-              <div style="flex:1; display:flex; flex-direction:column; gap:6px;">
+              <div style="flex:1; display:flex; flex-direction:column; gap:8px;">
                 <label class="field-label">CVV</label>
                 <input class="input" id="sc-cvv" type="tel" placeholder="3 dígitos" maxlength="4" oninput="validateCredit()" />
               </div>
             </div>
             <div style="display:flex; gap:12px;">
-              <div style="flex:1; display:flex; flex-direction:column; gap:6px;">
+              <div style="flex:1; display:flex; flex-direction:column; gap:8px;">
                 <label class="field-label">Nome do titular do cartão</label>
                 <input class="input" id="sc-name" type="text" placeholder="Nome no cartão" oninput="validateCredit()" />
               </div>
-              <div style="flex:1; display:flex; flex-direction:column; gap:6px;">
+              <div style="flex:1; display:flex; flex-direction:column; gap:8px;">
                 <label class="field-label">Parcelamento</label>
                 <select class="input">
+                  <option value="" disabled selected>Selecione</option>
                   <option>1x de R$ 200,00</option>
                   <option>2x de R$ 100,00</option>
                   <option>3x de R$ 66,67</option>
@@ -377,8 +357,11 @@
             </div>
           </div>
           <button class="btn-primary" id="btn-pay-credit" onclick="handlePay()" disabled>Pagar R$ 200,00</button>
-          <div style="text-align:center; margin-top:14px; font-size:11px; color:var(--muted-foreground);">
-            Powered by <strong style="font-weight:600;">malga</strong>
+          <div style="display:flex; justify-content:center; margin-top:14px;">
+            <div style="display:inline-flex; align-items:center; gap:6px; border:1px solid #e5e5e5; border-radius:8px; padding:2px 8px; width:133px; justify-content:center;">
+              <span style="font-size:12px; font-weight:300; color:#737373;">Powered by</span>
+              <svg width="34" height="13" viewBox="0 0 72 29" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.3435 4.93724C13.4796 4.93724 12.0437 5.88451 11.1882 7.50411C10.5771 5.79325 9.06233 4.93724 7.07596 4.93724C5.45636 4.93724 4.20413 5.70141 3.37873 7.0761V5.31697H0V20.1836H3.37873V11.9037C3.37873 9.3068 4.41784 7.96214 6.09807 7.96214C7.65645 7.96214 8.3588 8.92766 8.3588 10.8828V20.1836H11.6769L11.585 11.4145C11.585 8.90941 12.7154 7.96155 14.3044 7.96155C15.8015 7.96155 16.5045 8.92707 16.5045 10.8822V20.183H19.9138L19.8526 9.94734C19.8526 6.61806 18.1541 4.93724 15.3435 4.93724Z" fill="#171717"/><path d="M28.4475 4.98066C25.0959 4.98066 22.2629 7.02179 22.4454 10.7084L25.5833 10.9522C25.4309 9.03289 26.4976 7.81363 28.5388 7.81363C30.3668 7.81363 31.433 8.78857 31.433 10.0991V10.6472L28.0207 11.2259C24.2734 11.8352 22.4148 13.4195 22.4148 16.2531C22.4148 18.4467 24.0903 20.6403 27.442 20.6403C29.3006 20.6403 30.7324 19.7266 31.433 18.4773V20.1835H34.5709V10.2816C34.5715 7.02179 32.3773 4.98066 28.4475 4.98066ZM31.433 13.9682C31.433 16.1618 30.0618 17.6242 28.0813 17.6242C26.5889 17.6242 25.5828 16.9236 25.5828 15.8569C25.5828 14.6382 26.6796 14.0895 28.5076 13.7545L31.4324 13.267V13.9682H31.433Z" fill="#171717"/><path d="M37.5222 1.33514e-05V20.1835H40.8733V1.33514e-05H37.5222Z" fill="#171717"/><path d="M65.1189 4.98066C61.7673 4.98066 58.9343 7.02179 59.1168 10.7084L62.2547 10.9522C62.1022 9.03289 63.1684 7.81363 65.2102 7.81363C67.0382 7.81363 68.1044 8.78857 68.1044 10.0991V10.6472L64.6921 11.2259C60.9442 11.8352 59.0862 13.4195 59.0862 16.2531C59.0862 18.4467 60.7617 20.6403 64.1134 20.6403C65.972 20.6403 67.4038 19.7266 68.1049 18.4773V20.1835H71.2429V10.2816C71.2429 7.02179 69.0493 4.98066 65.1189 4.98066ZM68.1049 13.9682C68.1049 16.1618 66.7338 17.6242 64.7533 17.6242C63.2603 17.6242 62.2547 16.9236 62.2547 15.8569C62.2547 14.6382 63.3515 14.0895 65.1795 13.7545L68.1044 13.267V13.9682H68.1049Z" fill="#171717"/><path d="M52.7642 18.73H47.4944C46.5854 18.73 46.0338 18.2366 46.0338 17.645C46.0338 16.9544 46.5531 16.527 47.3973 16.527H50.5888C53.7379 16.527 56.3348 14.0284 56.3348 10.9052C56.3348 9.68885 55.978 8.70213 55.2309 7.78195L58.0162 7.91736L58.0233 5.31575H54.5498C53.2516 5.31575 52.375 5.16033 51.4489 5.0885C50.9968 5.01727 50.5199 4.98018 50.0224 4.98018C45.9378 4.98018 43.7065 7.24738 43.7065 10.7733C43.7065 12.417 44.4207 13.7652 45.6223 14.8832C44.0315 15.1464 42.9277 16.4616 42.9277 17.7433C42.9277 18.6964 43.3498 19.6172 44.2588 20.1759C42.9277 21.0967 42.3436 22.346 42.3436 23.9238C42.3436 26.6525 44.4536 28.5924 48.3817 28.5924H51.9853C55.4918 28.5924 58.0886 26.5866 58.0886 23.4634C58.0881 20.6699 56.0104 18.73 52.7642 18.73ZM50.0048 7.67421C52.2255 7.67421 52.9914 9.15369 52.9914 10.8063C52.9914 12.4588 52.1495 13.9383 50.0048 13.9383C47.86 13.9383 47.0182 12.4588 47.0182 10.8063C47.0182 9.15428 47.7841 7.67421 50.0048 7.67421ZM52.1472 25.8313H48.414C46.6614 25.8313 45.7842 24.8781 45.7842 23.6612C45.7842 22.7074 46.1739 21.4582 48.2515 21.4582H52.2119C53.7379 21.4582 54.6793 22.28 54.6793 23.5293C54.6793 24.9764 53.6732 25.8313 52.1472 25.8313Z" fill="#171717"/></svg>
+            </div>
           </div>
         </div>
 
@@ -393,8 +376,30 @@
             Após confirmar, um QR Code Pix será gerado. O pagamento é confirmado em segundos.
           </div>
           <button class="btn-primary" id="btn-pay-pix" onclick="handlePay()">Pagar R$ 200,00</button>
-          <div style="text-align:center; margin-top:14px; font-size:11px; color:var(--muted-foreground);">
-            Powered by <strong style="font-weight:600;">malga</strong>
+          <div style="display:flex; justify-content:center; margin-top:14px;">
+            <div style="display:inline-flex; align-items:center; gap:6px; border:1px solid #e5e5e5; border-radius:8px; padding:2px 8px; width:133px; justify-content:center;">
+              <span style="font-size:12px; font-weight:300; color:#737373;">Powered by</span>
+              <svg width="34" height="13" viewBox="0 0 72 29" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.3435 4.93724C13.4796 4.93724 12.0437 5.88451 11.1882 7.50411C10.5771 5.79325 9.06233 4.93724 7.07596 4.93724C5.45636 4.93724 4.20413 5.70141 3.37873 7.0761V5.31697H0V20.1836H3.37873V11.9037C3.37873 9.3068 4.41784 7.96214 6.09807 7.96214C7.65645 7.96214 8.3588 8.92766 8.3588 10.8828V20.1836H11.6769L11.585 11.4145C11.585 8.90941 12.7154 7.96155 14.3044 7.96155C15.8015 7.96155 16.5045 8.92707 16.5045 10.8822V20.183H19.9138L19.8526 9.94734C19.8526 6.61806 18.1541 4.93724 15.3435 4.93724Z" fill="#171717"/><path d="M28.4475 4.98066C25.0959 4.98066 22.2629 7.02179 22.4454 10.7084L25.5833 10.9522C25.4309 9.03289 26.4976 7.81363 28.5388 7.81363C30.3668 7.81363 31.433 8.78857 31.433 10.0991V10.6472L28.0207 11.2259C24.2734 11.8352 22.4148 13.4195 22.4148 16.2531C22.4148 18.4467 24.0903 20.6403 27.442 20.6403C29.3006 20.6403 30.7324 19.7266 31.433 18.4773V20.1835H34.5709V10.2816C34.5715 7.02179 32.3773 4.98066 28.4475 4.98066ZM31.433 13.9682C31.433 16.1618 30.0618 17.6242 28.0813 17.6242C26.5889 17.6242 25.5828 16.9236 25.5828 15.8569C25.5828 14.6382 26.6796 14.0895 28.5076 13.7545L31.4324 13.267V13.9682H31.433Z" fill="#171717"/><path d="M37.5222 1.33514e-05V20.1835H40.8733V1.33514e-05H37.5222Z" fill="#171717"/><path d="M65.1189 4.98066C61.7673 4.98066 58.9343 7.02179 59.1168 10.7084L62.2547 10.9522C62.1022 9.03289 63.1684 7.81363 65.2102 7.81363C67.0382 7.81363 68.1044 8.78857 68.1044 10.0991V10.6472L64.6921 11.2259C60.9442 11.8352 59.0862 13.4195 59.0862 16.2531C59.0862 18.4467 60.7617 20.6403 64.1134 20.6403C65.972 20.6403 67.4038 19.7266 68.1049 18.4773V20.1835H71.2429V10.2816C71.2429 7.02179 69.0493 4.98066 65.1189 4.98066ZM68.1049 13.9682C68.1049 16.1618 66.7338 17.6242 64.7533 17.6242C63.2603 17.6242 62.2547 16.9236 62.2547 15.8569C62.2547 14.6382 63.3515 14.0895 65.1795 13.7545L68.1044 13.267V13.9682H68.1049Z" fill="#171717"/><path d="M52.7642 18.73H47.4944C46.5854 18.73 46.0338 18.2366 46.0338 17.645C46.0338 16.9544 46.5531 16.527 47.3973 16.527H50.5888C53.7379 16.527 56.3348 14.0284 56.3348 10.9052C56.3348 9.68885 55.978 8.70213 55.2309 7.78195L58.0162 7.91736L58.0233 5.31575H54.5498C53.2516 5.31575 52.375 5.16033 51.4489 5.0885C50.9968 5.01727 50.5199 4.98018 50.0224 4.98018C45.9378 4.98018 43.7065 7.24738 43.7065 10.7733C43.7065 12.417 44.4207 13.7652 45.6223 14.8832C44.0315 15.1464 42.9277 16.4616 42.9277 17.7433C42.9277 18.6964 43.3498 19.6172 44.2588 20.1759C42.9277 21.0967 42.3436 22.346 42.3436 23.9238C42.3436 26.6525 44.4536 28.5924 48.3817 28.5924H51.9853C55.4918 28.5924 58.0886 26.5866 58.0886 23.4634C58.0881 20.6699 56.0104 18.73 52.7642 18.73ZM50.0048 7.67421C52.2255 7.67421 52.9914 9.15369 52.9914 10.8063C52.9914 12.4588 52.1495 13.9383 50.0048 13.9383C47.86 13.9383 47.0182 12.4588 47.0182 10.8063C47.0182 9.15428 47.7841 7.67421 50.0048 7.67421ZM52.1472 25.8313H48.414C46.6614 25.8313 45.7842 24.8781 45.7842 23.6612C45.7842 22.7074 46.1739 21.4582 48.2515 21.4582H52.2119C53.7379 21.4582 54.6793 22.28 54.6793 23.5293C54.6793 24.9764 53.6732 25.8313 52.1472 25.8313Z" fill="#171717"/></svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══ VIEW: Boleto Bancário ═══ -->
+        <div id="view-boleto" style="display:none;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <span style="font-size:20px; font-weight:600; line-height:28px;">Boleto</span>
+            <button onclick="goView('methods')" style="font-size:12px; font-weight:500; color:var(--primary); background:none; border:none; cursor:pointer; font-family:inherit; padding:0;">Pagar com outro método</button>
+          </div>
+          <div class="info-banner" style="margin-bottom:20px;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="16"/><line x1="8" x2="16" y1="12" y2="12"/></svg>
+            Após confirmar, um boleto será gerado com vencimento em 3 dias úteis.
+          </div>
+          <button class="btn-primary" id="btn-pay-boleto" onclick="handlePay()">Pagar R$ 200,00</button>
+          <div style="display:flex; justify-content:center; margin-top:14px;">
+            <div style="display:inline-flex; align-items:center; gap:6px; border:1px solid #e5e5e5; border-radius:8px; padding:2px 8px; width:133px; justify-content:center;">
+              <span style="font-size:12px; font-weight:300; color:#737373;">Powered by</span>
+              <svg width="34" height="13" viewBox="0 0 72 29" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.3435 4.93724C13.4796 4.93724 12.0437 5.88451 11.1882 7.50411C10.5771 5.79325 9.06233 4.93724 7.07596 4.93724C5.45636 4.93724 4.20413 5.70141 3.37873 7.0761V5.31697H0V20.1836H3.37873V11.9037C3.37873 9.3068 4.41784 7.96214 6.09807 7.96214C7.65645 7.96214 8.3588 8.92766 8.3588 10.8828V20.1836H11.6769L11.585 11.4145C11.585 8.90941 12.7154 7.96155 14.3044 7.96155C15.8015 7.96155 16.5045 8.92707 16.5045 10.8822V20.183H19.9138L19.8526 9.94734C19.8526 6.61806 18.1541 4.93724 15.3435 4.93724Z" fill="#171717"/><path d="M28.4475 4.98066C25.0959 4.98066 22.2629 7.02179 22.4454 10.7084L25.5833 10.9522C25.4309 9.03289 26.4976 7.81363 28.5388 7.81363C30.3668 7.81363 31.433 8.78857 31.433 10.0991V10.6472L28.0207 11.2259C24.2734 11.8352 22.4148 13.4195 22.4148 16.2531C22.4148 18.4467 24.0903 20.6403 27.442 20.6403C29.3006 20.6403 30.7324 19.7266 31.433 18.4773V20.1835H34.5709V10.2816C34.5715 7.02179 32.3773 4.98066 28.4475 4.98066ZM31.433 13.9682C31.433 16.1618 30.0618 17.6242 28.0813 17.6242C26.5889 17.6242 25.5828 16.9236 25.5828 15.8569C25.5828 14.6382 26.6796 14.0895 28.5076 13.7545L31.4324 13.267V13.9682H31.433Z" fill="#171717"/><path d="M37.5222 1.33514e-05V20.1835H40.8733V1.33514e-05H37.5222Z" fill="#171717"/><path d="M65.1189 4.98066C61.7673 4.98066 58.9343 7.02179 59.1168 10.7084L62.2547 10.9522C62.1022 9.03289 63.1684 7.81363 65.2102 7.81363C67.0382 7.81363 68.1044 8.78857 68.1044 10.0991V10.6472L64.6921 11.2259C60.9442 11.8352 59.0862 13.4195 59.0862 16.2531C59.0862 18.4467 60.7617 20.6403 64.1134 20.6403C65.972 20.6403 67.4038 19.7266 68.1049 18.4773V20.1835H71.2429V10.2816C71.2429 7.02179 69.0493 4.98066 65.1189 4.98066ZM68.1049 13.9682C68.1049 16.1618 66.7338 17.6242 64.7533 17.6242C63.2603 17.6242 62.2547 16.9236 62.2547 15.8569C62.2547 14.6382 63.3515 14.0895 65.1795 13.7545L68.1044 13.267V13.9682H68.1049Z" fill="#171717"/><path d="M52.7642 18.73H47.4944C46.5854 18.73 46.0338 18.2366 46.0338 17.645C46.0338 16.9544 46.5531 16.527 47.3973 16.527H50.5888C53.7379 16.527 56.3348 14.0284 56.3348 10.9052C56.3348 9.68885 55.978 8.70213 55.2309 7.78195L58.0162 7.91736L58.0233 5.31575H54.5498C53.2516 5.31575 52.375 5.16033 51.4489 5.0885C50.9968 5.01727 50.5199 4.98018 50.0224 4.98018C45.9378 4.98018 43.7065 7.24738 43.7065 10.7733C43.7065 12.417 44.4207 13.7652 45.6223 14.8832C44.0315 15.1464 42.9277 16.4616 42.9277 17.7433C42.9277 18.6964 43.3498 19.6172 44.2588 20.1759C42.9277 21.0967 42.3436 22.346 42.3436 23.9238C42.3436 26.6525 44.4536 28.5924 48.3817 28.5924H51.9853C55.4918 28.5924 58.0886 26.5866 58.0886 23.4634C58.0881 20.6699 56.0104 18.73 52.7642 18.73ZM50.0048 7.67421C52.2255 7.67421 52.9914 9.15369 52.9914 10.8063C52.9914 12.4588 52.1495 13.9383 50.0048 13.9383C47.86 13.9383 47.0182 12.4588 47.0182 10.8063C47.0182 9.15428 47.7841 7.67421 50.0048 7.67421ZM52.1472 25.8313H48.414C46.6614 25.8313 45.7842 24.8781 45.7842 23.6612C45.7842 22.7074 46.1739 21.4582 48.2515 21.4582H52.2119C53.7379 21.4582 54.6793 22.28 54.6793 23.5293C54.6793 24.9764 53.6732 25.8313 52.1472 25.8313Z" fill="#171717"/></svg>
+            </div>
           </div>
         </div>
 
@@ -409,95 +414,104 @@
 
           <!-- Barra de progresso -->
           <div style="margin-bottom:20px;">
-            <div style="display:flex; gap:4px; margin-bottom:5px;">
-              <div id="prog-bar-1" style="flex:1; height:8px; border-radius:4px; background:var(--teal); transition:background .3s;"></div>
-              <div id="prog-bar-2" style="flex:1; height:8px; border-radius:4px; background:rgba(37,124,112,0.2); transition:background .3s;"></div>
+            <div style="display:flex; gap:9px; margin-bottom:5px;">
+              <div id="prog-bar-1" style="flex:1; height:8px; border-radius:9999px; background:var(--teal); transition:background .3s;"></div>
+              <div id="prog-bar-2" style="flex:1; height:8px; border-radius:9999px; background:rgba(20,127,112,0.2); transition:background .3s;"></div>
             </div>
             <div id="dual-step-label" style="font-size:12px; color:var(--muted-foreground); display:flex; justify-content:flex-start;">Passo 1 de 2</div>
           </div>
 
           <!-- ── PASSO 1: Divisão + Dados cartão 1 ── -->
-          <div id="dual-passo1">
-            <div style="font-size:16px; font-weight:600; line-height:24px; color:var(--foreground); margin-bottom:12px;">Ajuste a divisão entre os cartões</div>
-            <!-- Card com as linhas de divisão -->
-            <div style="border:1px solid var(--border-solid); border-radius:16px; background:var(--card); margin-bottom:16px; padding:16px 0; display:flex; flex-direction:column; gap:12px;">
-              <div style="display:flex; align-items:center; justify-content:space-between; padding:0 24px;">
-                <span style="font-size:14px; color:var(--foreground);">Primeiro cartão</span>
-                <div id="amt1-wrap" style="display:flex; align-items:center; gap:4px; border:1px solid #e5e5e5; border-radius:8px; padding:4px 12px; background:#fafafa; height:36px; transition:border-color .15s;">
-                  <span style="font-size:14px; color:var(--muted-foreground); white-space:nowrap;">R$</span>
-                  <input type="text" id="amt1-input" style="border:none; outline:none; width:80px; font-size:14px; font-family:inherit; background:transparent; color:var(--foreground); text-align:right;" placeholder="0,00" oninput="onAmt1Input()" onblur="formatAmt1Input()" />
-                </div>
-              </div>
-              <div id="amt1-error" style="display:none; font-size:12px; color:#ef4444; padding:0 24px; margin-top:-4px;">O valor mínimo por cartão é R$ 1,00</div>
-              <div style="height:1px; background:#e5e5e5;"></div>
-              <div style="display:flex; align-items:center; justify-content:space-between; padding:0 24px;">
-                <span style="font-size:14px; color:var(--foreground); opacity:0.5;">Segundo cartão</span>
-                <div style="display:flex; align-items:center; gap:4px; border:1px solid #e5e5e5; border-radius:8px; padding:4px 12px; background:#fafafa; height:36px; opacity:0.5;">
-                  <span style="font-size:14px; color:#737373; white-space:nowrap;">R$</span>
-                  <input type="text" id="amt2-display" readonly style="border:none; outline:none; width:80px; font-size:14px; font-family:inherit; background:transparent; color:#737373; text-align:right; cursor:default;" value="100,00" />
-                </div>
-              </div>
-            </div>
-            <div style="height:1px; background:var(--border-solid); margin-bottom:16px;"></div>
-            <div style="font-size:16px; font-weight:600; line-height:24px; color:var(--foreground); margin-bottom:12px;">Dados do primeiro cartão</div>
-            <div style="border:1px solid var(--border-solid); border-radius:var(--radius); background:var(--card); padding:16px; margin-bottom:16px;">
-              <div style="display:flex; flex-direction:column; gap:12px;">
-                <div style="display:flex; flex-direction:column; gap:6px;">
-                  <label class="field-label">Número do cartão</label>
-                  <div style="position:relative;">
-                    <input class="input" id="c1-number" type="tel" placeholder="1234 5678 9012 3456" maxlength="19" oninput="fmtCard(this); validatePasso1()" style="padding-left:38px;" />
-                    <span style="position:absolute; left:10px; top:50%; transform:translateY(-50%); pointer-events:none; color:var(--muted-foreground);">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
-                    </span>
+          <div id="dual-passo1" style="display:flex; flex-direction:column; gap:24px;">
+
+            <!-- Seção 1: Ajuste de divisão -->
+            <div style="display:flex; flex-direction:column; gap:16px;">
+              <div style="font-size:16px; font-weight:600; line-height:24px; color:var(--foreground);">Ajuste a divisão entre os cartões</div>
+              <!-- Card com as linhas de divisão -->
+              <div style="border:1px solid var(--border-solid); border-radius:16px; background:var(--card); padding:16px 0; display:flex; flex-direction:column; gap:12px;">
+                <div style="display:flex; align-items:flex-start; justify-content:space-between; padding:0 24px;">
+                  <span style="font-size:14px; color:var(--foreground); line-height:36px;">Primeiro cartão</span>
+                  <div style="display:flex; flex-direction:column; align-items:flex-end; gap:4px;">
+                    <div id="amt1-wrap" style="display:flex; align-items:center; gap:4px; border:1px solid #e5e5e5; border-radius:8px; padding:4px 12px; background:#fafafa; height:36px; transition:border-color .15s;">
+                      <span style="font-size:14px; color:var(--muted-foreground); white-space:nowrap;">R$</span>
+                      <input type="text" id="amt1-input" style="border:none; outline:none; width:80px; font-size:14px; font-family:inherit; background:transparent; color:var(--foreground); text-align:right;" placeholder="0,00" oninput="onAmt1Input()" onblur="formatAmt1Input()" />
+                    </div>
+                    <div id="amt1-error" style="display:none; font-size:12px; color:#ef4444; text-align:right;">O valor mínimo por cartão é R$ 1,00</div>
                   </div>
                 </div>
-                <div style="display:flex; gap:12px;">
-                  <div style="flex:1; display:flex; flex-direction:column; gap:6px;">
-                    <label class="field-label">Data de expiração</label>
-                    <input class="input" id="c1-expiry" type="text" placeholder="MM/AA" maxlength="5" oninput="fmtExpiry(this); validatePasso1()" />
-                  </div>
-                  <div style="flex:1; display:flex; flex-direction:column; gap:6px;">
-                    <label class="field-label">CVV</label>
-                    <input class="input" id="c1-cvv" type="tel" placeholder="3 dígitos" maxlength="4" oninput="validatePasso1()" />
-                  </div>
-                </div>
-                <div style="display:flex; gap:12px;">
-                  <div style="flex:1; display:flex; flex-direction:column; gap:6px;">
-                    <label class="field-label">Nome do titular do cartão</label>
-                    <input class="input" id="c1-name" type="text" placeholder="Nome no cartão" oninput="validatePasso1()" />
-                  </div>
-                  <div style="flex:1; display:flex; flex-direction:column; gap:6px;">
-                    <label class="field-label">Parcelamento</label>
-                    <select class="input" id="c1-inst"></select>
+                <div style="height:1px; background:#e5e5e5;"></div>
+                <div style="display:flex; align-items:center; justify-content:space-between; padding:0 24px;">
+                  <span style="font-size:14px; color:var(--foreground); opacity:0.5;">Segundo cartão</span>
+                  <div style="display:flex; align-items:center; gap:4px; border:1px solid #e5e5e5; border-radius:8px; padding:4px 12px; background:#fafafa; height:36px; opacity:0.5;">
+                    <span style="font-size:14px; color:#737373; white-space:nowrap;">R$</span>
+                    <input type="text" id="amt2-display" readonly style="border:none; outline:none; width:80px; font-size:14px; font-family:inherit; background:transparent; color:#737373; text-align:right; cursor:default;" value="100,00" />
                   </div>
                 </div>
               </div>
             </div>
+
+            <!-- Seção 2: Dados do primeiro cartão -->
+            <div style="display:flex; flex-direction:column; gap:16px;">
+              <div style="font-size:16px; font-weight:600; line-height:24px; color:var(--foreground);">Dados do primeiro cartão</div>
+              <div style="border:1px solid var(--border-solid); border-radius:16px; background:var(--card); padding:24px;">
+                <div style="display:flex; flex-direction:column; gap:20px;">
+                  <div style="display:flex; flex-direction:column; gap:8px;">
+                    <label class="field-label">Número do cartão</label>
+                    <div style="position:relative;">
+                      <input class="input" id="c1-number" type="tel" placeholder="1234 5678 9012 3456" maxlength="19" oninput="fmtCard(this); validatePasso1()" style="padding-left:38px;" />
+                      <span style="position:absolute; left:10px; top:50%; transform:translateY(-50%); pointer-events:none; color:var(--muted-foreground);">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+                      </span>
+                    </div>
+                  </div>
+                  <div style="display:flex; gap:12px;">
+                    <div style="flex:1; display:flex; flex-direction:column; gap:8px;">
+                      <label class="field-label">Data de expiração</label>
+                      <input class="input" id="c1-expiry" type="text" placeholder="MM/AA" maxlength="5" oninput="fmtExpiry(this); validatePasso1()" />
+                    </div>
+                    <div style="flex:1; display:flex; flex-direction:column; gap:8px;">
+                      <label class="field-label">CVV</label>
+                      <input class="input" id="c1-cvv" type="tel" placeholder="3 dígitos" maxlength="4" oninput="validatePasso1()" />
+                    </div>
+                  </div>
+                  <div style="display:flex; gap:12px;">
+                    <div style="flex:1; display:flex; flex-direction:column; gap:8px;">
+                      <label class="field-label">Nome do titular do cartão</label>
+                      <input class="input" id="c1-name" type="text" placeholder="Nome no cartão" oninput="validatePasso1()" />
+                    </div>
+                    <div style="flex:1; display:flex; flex-direction:column; gap:8px;">
+                      <label class="field-label">Parcelamento</label>
+                      <select class="input" id="c1-inst" onchange="validatePasso1()"></select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <button class="btn-teal" id="btn-continuar-passo1" onclick="dualSubmitPasso1()" disabled>Continuar para o segundo cartão</button>
           </div>
 
           <!-- ── PASSO 2: Recap cartão 1 + Dados cartão 2 ── -->
           <div id="dual-passo2" style="display:none;">
             <div style="font-size:16px; font-weight:600; line-height:24px; color:var(--foreground); margin-bottom:10px;">Primeiro cartão</div>
-            <div style="display:flex; align-items:center; gap:10px; padding:12px 14px; border:1px solid var(--border-solid); border-radius:var(--radius); margin-bottom:16px; background:var(--card);">
+            <div style="display:flex; align-items:center; gap:10px; padding:16px 16px 16px 24px; border:1px solid var(--border-solid); border-radius:16px; margin-bottom:16px; background:var(--card);">
               <span id="recap-brand-icon" style="flex-shrink:0; width:28px; height:20px; display:flex; align-items:center; justify-content:center;"></span>
               <div style="flex:1; min-width:0;">
                 <div style="font-size:13px; font-weight:600; color:var(--foreground); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" id="recap-card-name">•••• ****</div>
                 <div style="font-size:12px; color:var(--muted-foreground); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" id="recap-inst-text">1x de R$ 100,00 sem juros</div>
               </div>
               <span style="font-size:13px; font-weight:600; flex-shrink:0; color:var(--foreground);" id="recap-amount">R$ 100,00</span>
-              <button onclick="dualGoPassoV3('passo1')" style="background:none; border:none; cursor:pointer; padding:4px; display:flex; align-items:center; color:var(--muted-foreground); flex-shrink:0;" title="Editar">
-                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
+              <button onclick="dualGoPassoV3('passo1')" style="width:36px; height:36px; background:none; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; color:var(--muted-foreground); flex-shrink:0;" title="Editar">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
               </button>
             </div>
-            <div style="height:1px; background:var(--border-solid); margin-bottom:16px;"></div>
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
               <span style="font-size:16px; font-weight:600; line-height:24px; color:var(--foreground);">Dados do segundo cartão</span>
               <span style="font-size:13px; font-weight:600; color:var(--foreground);" id="card2-amount-label">R$ 100,00</span>
             </div>
-            <div style="border:1px solid var(--border-solid); border-radius:var(--radius); background:var(--card); padding:16px; margin-bottom:16px;">
-              <div style="display:flex; flex-direction:column; gap:12px;">
-                <div style="display:flex; flex-direction:column; gap:6px;">
+            <div style="border:1px solid var(--border-solid); border-radius:16px; background:var(--card); padding:24px; margin-bottom:16px;">
+              <div style="display:flex; flex-direction:column; gap:20px;">
+                <div style="display:flex; flex-direction:column; gap:8px;">
                   <label class="field-label">Número do cartão</label>
                   <div style="position:relative;">
                     <input class="input" id="c2-number" type="tel" placeholder="1234 5678 9012 3456" maxlength="19" oninput="fmtCard(this); validatePasso2()" style="padding-left:38px;" />
@@ -507,21 +521,21 @@
                   </div>
                 </div>
                 <div style="display:flex; gap:12px;">
-                  <div style="flex:1; display:flex; flex-direction:column; gap:6px;">
+                  <div style="flex:1; display:flex; flex-direction:column; gap:8px;">
                     <label class="field-label">Data de expiração</label>
                     <input class="input" id="c2-expiry" type="text" placeholder="MM/AA" maxlength="5" oninput="fmtExpiry(this); validatePasso2()" />
                   </div>
-                  <div style="flex:1; display:flex; flex-direction:column; gap:6px;">
+                  <div style="flex:1; display:flex; flex-direction:column; gap:8px;">
                     <label class="field-label">CVV</label>
                     <input class="input" id="c2-cvv" type="tel" placeholder="3 dígitos" maxlength="4" oninput="validatePasso2()" />
                   </div>
                 </div>
                 <div style="display:flex; gap:12px;">
-                  <div style="flex:1; display:flex; flex-direction:column; gap:6px;">
+                  <div style="flex:1; display:flex; flex-direction:column; gap:8px;">
                     <label class="field-label">Nome do titular do cartão</label>
                     <input class="input" id="c2-name" type="text" placeholder="Nome no cartão" oninput="validatePasso2()" />
                   </div>
-                  <div style="flex:1; display:flex; flex-direction:column; gap:6px;">
+                  <div style="flex:1; display:flex; flex-direction:column; gap:8px;">
                     <label class="field-label">Parcelamento</label>
                     <select class="input" id="c2-inst"></select>
                   </div>
@@ -529,8 +543,11 @@
               </div>
             </div>
             <button class="btn-teal" id="btn-pay-passo2" onclick="handlePay()" disabled>Pagar R$ 200,00</button>
-            <div style="text-align:center; margin-top:14px; font-size:11px; color:var(--muted-foreground);">
-              Powered by <strong style="font-weight:600;">malga</strong>
+            <div style="display:flex; justify-content:center; margin-top:14px;">
+              <div style="display:inline-flex; align-items:center; gap:6px; border:1px solid #e5e5e5; border-radius:8px; padding:2px 8px; width:133px; justify-content:center;">
+                <span style="font-size:12px; font-weight:300; color:#737373;">Powered by</span>
+                <svg width="34" height="13" viewBox="0 0 72 29" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.3435 4.93724C13.4796 4.93724 12.0437 5.88451 11.1882 7.50411C10.5771 5.79325 9.06233 4.93724 7.07596 4.93724C5.45636 4.93724 4.20413 5.70141 3.37873 7.0761V5.31697H0V20.1836H3.37873V11.9037C3.37873 9.3068 4.41784 7.96214 6.09807 7.96214C7.65645 7.96214 8.3588 8.92766 8.3588 10.8828V20.1836H11.6769L11.585 11.4145C11.585 8.90941 12.7154 7.96155 14.3044 7.96155C15.8015 7.96155 16.5045 8.92707 16.5045 10.8822V20.183H19.9138L19.8526 9.94734C19.8526 6.61806 18.1541 4.93724 15.3435 4.93724Z" fill="#171717"/><path d="M28.4475 4.98066C25.0959 4.98066 22.2629 7.02179 22.4454 10.7084L25.5833 10.9522C25.4309 9.03289 26.4976 7.81363 28.5388 7.81363C30.3668 7.81363 31.433 8.78857 31.433 10.0991V10.6472L28.0207 11.2259C24.2734 11.8352 22.4148 13.4195 22.4148 16.2531C22.4148 18.4467 24.0903 20.6403 27.442 20.6403C29.3006 20.6403 30.7324 19.7266 31.433 18.4773V20.1835H34.5709V10.2816C34.5715 7.02179 32.3773 4.98066 28.4475 4.98066ZM31.433 13.9682C31.433 16.1618 30.0618 17.6242 28.0813 17.6242C26.5889 17.6242 25.5828 16.9236 25.5828 15.8569C25.5828 14.6382 26.6796 14.0895 28.5076 13.7545L31.4324 13.267V13.9682H31.433Z" fill="#171717"/><path d="M37.5222 1.33514e-05V20.1835H40.8733V1.33514e-05H37.5222Z" fill="#171717"/><path d="M65.1189 4.98066C61.7673 4.98066 58.9343 7.02179 59.1168 10.7084L62.2547 10.9522C62.1022 9.03289 63.1684 7.81363 65.2102 7.81363C67.0382 7.81363 68.1044 8.78857 68.1044 10.0991V10.6472L64.6921 11.2259C60.9442 11.8352 59.0862 13.4195 59.0862 16.2531C59.0862 18.4467 60.7617 20.6403 64.1134 20.6403C65.972 20.6403 67.4038 19.7266 68.1049 18.4773V20.1835H71.2429V10.2816C71.2429 7.02179 69.0493 4.98066 65.1189 4.98066ZM68.1049 13.9682C68.1049 16.1618 66.7338 17.6242 64.7533 17.6242C63.2603 17.6242 62.2547 16.9236 62.2547 15.8569C62.2547 14.6382 63.3515 14.0895 65.1795 13.7545L68.1044 13.267V13.9682H68.1049Z" fill="#171717"/><path d="M52.7642 18.73H47.4944C46.5854 18.73 46.0338 18.2366 46.0338 17.645C46.0338 16.9544 46.5531 16.527 47.3973 16.527H50.5888C53.7379 16.527 56.3348 14.0284 56.3348 10.9052C56.3348 9.68885 55.978 8.70213 55.2309 7.78195L58.0162 7.91736L58.0233 5.31575H54.5498C53.2516 5.31575 52.375 5.16033 51.4489 5.0885C50.9968 5.01727 50.5199 4.98018 50.0224 4.98018C45.9378 4.98018 43.7065 7.24738 43.7065 10.7733C43.7065 12.417 44.4207 13.7652 45.6223 14.8832C44.0315 15.1464 42.9277 16.4616 42.9277 17.7433C42.9277 18.6964 43.3498 19.6172 44.2588 20.1759C42.9277 21.0967 42.3436 22.346 42.3436 23.9238C42.3436 26.6525 44.4536 28.5924 48.3817 28.5924H51.9853C55.4918 28.5924 58.0886 26.5866 58.0886 23.4634C58.0881 20.6699 56.0104 18.73 52.7642 18.73ZM50.0048 7.67421C52.2255 7.67421 52.9914 9.15369 52.9914 10.8063C52.9914 12.4588 52.1495 13.9383 50.0048 13.9383C47.86 13.9383 47.0182 12.4588 47.0182 10.8063C47.0182 9.15428 47.7841 7.67421 50.0048 7.67421ZM52.1472 25.8313H48.414C46.6614 25.8313 45.7842 24.8781 45.7842 23.6612C45.7842 22.7074 46.1739 21.4582 48.2515 21.4582H52.2119C53.7379 21.4582 54.6793 22.28 54.6793 23.5293C54.6793 24.9764 53.6732 25.8313 52.1472 25.8313Z" fill="#171717"/></svg>
+              </div>
             </div>
           </div>
 
@@ -540,10 +557,10 @@
         <div id="view-success" style="display:none;">
           <!-- Check icon + título -->
           <div style="display:flex; align-items:center; gap:12px; margin-bottom:20px;">
-            <div style="width:40px; height:40px; flex-shrink:0; border-radius:50%; background:#22c55e; display:flex; align-items:center; justify-content:center;">
+            <div style="width:42px; height:42px; flex-shrink:0; border-radius:30px; background:#00ae42; display:flex; align-items:center; justify-content:center;">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
             </div>
-            <h2 style="font-size:20px; font-weight:700; margin:0; color:var(--foreground);">Pagamento realizado com sucesso!</h2>
+            <h2 style="font-size:20px; font-weight:600; margin:0; color:var(--foreground);">Pagamento realizado com sucesso!</h2>
           </div>
 
           <!-- Card de resumo -->
@@ -570,17 +587,44 @@
 
           </div>
 
-          <div style="text-align:center; margin-top:4px; font-size:11px; color:var(--muted-foreground);">
-            Powered by <strong style="font-weight:600;">malga</strong>
+          <div style="display:flex; justify-content:center; margin-top:4px;">
+            <div style="display:inline-flex; align-items:center; gap:6px; border:1px solid #e5e5e5; border-radius:8px; padding:2px 8px; width:133px; justify-content:center;">
+              <span style="font-size:12px; font-weight:300; color:#737373;">Powered by</span>
+              <svg width="34" height="13" viewBox="0 0 72 29" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.3435 4.93724C13.4796 4.93724 12.0437 5.88451 11.1882 7.50411C10.5771 5.79325 9.06233 4.93724 7.07596 4.93724C5.45636 4.93724 4.20413 5.70141 3.37873 7.0761V5.31697H0V20.1836H3.37873V11.9037C3.37873 9.3068 4.41784 7.96214 6.09807 7.96214C7.65645 7.96214 8.3588 8.92766 8.3588 10.8828V20.1836H11.6769L11.585 11.4145C11.585 8.90941 12.7154 7.96155 14.3044 7.96155C15.8015 7.96155 16.5045 8.92707 16.5045 10.8822V20.183H19.9138L19.8526 9.94734C19.8526 6.61806 18.1541 4.93724 15.3435 4.93724Z" fill="#171717"/><path d="M28.4475 4.98066C25.0959 4.98066 22.2629 7.02179 22.4454 10.7084L25.5833 10.9522C25.4309 9.03289 26.4976 7.81363 28.5388 7.81363C30.3668 7.81363 31.433 8.78857 31.433 10.0991V10.6472L28.0207 11.2259C24.2734 11.8352 22.4148 13.4195 22.4148 16.2531C22.4148 18.4467 24.0903 20.6403 27.442 20.6403C29.3006 20.6403 30.7324 19.7266 31.433 18.4773V20.1835H34.5709V10.2816C34.5715 7.02179 32.3773 4.98066 28.4475 4.98066ZM31.433 13.9682C31.433 16.1618 30.0618 17.6242 28.0813 17.6242C26.5889 17.6242 25.5828 16.9236 25.5828 15.8569C25.5828 14.6382 26.6796 14.0895 28.5076 13.7545L31.4324 13.267V13.9682H31.433Z" fill="#171717"/><path d="M37.5222 1.33514e-05V20.1835H40.8733V1.33514e-05H37.5222Z" fill="#171717"/><path d="M65.1189 4.98066C61.7673 4.98066 58.9343 7.02179 59.1168 10.7084L62.2547 10.9522C62.1022 9.03289 63.1684 7.81363 65.2102 7.81363C67.0382 7.81363 68.1044 8.78857 68.1044 10.0991V10.6472L64.6921 11.2259C60.9442 11.8352 59.0862 13.4195 59.0862 16.2531C59.0862 18.4467 60.7617 20.6403 64.1134 20.6403C65.972 20.6403 67.4038 19.7266 68.1049 18.4773V20.1835H71.2429V10.2816C71.2429 7.02179 69.0493 4.98066 65.1189 4.98066ZM68.1049 13.9682C68.1049 16.1618 66.7338 17.6242 64.7533 17.6242C63.2603 17.6242 62.2547 16.9236 62.2547 15.8569C62.2547 14.6382 63.3515 14.0895 65.1795 13.7545L68.1044 13.267V13.9682H68.1049Z" fill="#171717"/><path d="M52.7642 18.73H47.4944C46.5854 18.73 46.0338 18.2366 46.0338 17.645C46.0338 16.9544 46.5531 16.527 47.3973 16.527H50.5888C53.7379 16.527 56.3348 14.0284 56.3348 10.9052C56.3348 9.68885 55.978 8.70213 55.2309 7.78195L58.0162 7.91736L58.0233 5.31575H54.5498C53.2516 5.31575 52.375 5.16033 51.4489 5.0885C50.9968 5.01727 50.5199 4.98018 50.0224 4.98018C45.9378 4.98018 43.7065 7.24738 43.7065 10.7733C43.7065 12.417 44.4207 13.7652 45.6223 14.8832C44.0315 15.1464 42.9277 16.4616 42.9277 17.7433C42.9277 18.6964 43.3498 19.6172 44.2588 20.1759C42.9277 21.0967 42.3436 22.346 42.3436 23.9238C42.3436 26.6525 44.4536 28.5924 48.3817 28.5924H51.9853C55.4918 28.5924 58.0886 26.5866 58.0886 23.4634C58.0881 20.6699 56.0104 18.73 52.7642 18.73ZM50.0048 7.67421C52.2255 7.67421 52.9914 9.15369 52.9914 10.8063C52.9914 12.4588 52.1495 13.9383 50.0048 13.9383C47.86 13.9383 47.0182 12.4588 47.0182 10.8063C47.0182 9.15428 47.7841 7.67421 50.0048 7.67421ZM52.1472 25.8313H48.414C46.6614 25.8313 45.7842 24.8781 45.7842 23.6612C45.7842 22.7074 46.1739 21.4582 48.2515 21.4582H52.2119C53.7379 21.4582 54.6793 22.28 54.6793 23.5293C54.6793 24.9764 53.6732 25.8313 52.1472 25.8313Z" fill="#171717"/></svg>
+            </div>
           </div>
         </div><!-- /view-success -->
+
+        <!-- ═══ VIEW: Loading ═══ -->
+        <!-- ═══ MODAL OVERLAY: Loading ═══ -->
+
+        <!-- ═══ VIEW: Erro ═══ -->
+        <div id="view-error" style="display:none;">
+          <div style="display:flex; align-items:center; gap:12px; margin-bottom:20px;">
+            <div style="width:42px; height:42px; flex-shrink:0; border-radius:30px; background:#ef4444; display:flex; align-items:center; justify-content:center;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </div>
+            <h2 style="font-size:20px; font-weight:600; margin:0; color:var(--foreground);">Transação não aprovada</h2>
+          </div>
+          <div class="card" style="padding:20px; margin-bottom:16px;">
+            <div id="error-msg" style="font-size:14px; color:var(--muted-foreground); margin-bottom:16px;">O cartão foi recusado e o pedido foi cancelado. Nenhum valor será cobrado.</div>
+            <div style="display:flex; flex-direction:column; gap:10px;" id="error-payment-rows"></div>
+          </div>
+          <button class="btn-primary" onclick="goView('dual')" style="background:#0a0a0a;">Tentar novamente</button>
+          <div style="display:flex; justify-content:center; margin-top:14px;">
+            <div style="display:inline-flex; align-items:center; gap:6px; border:1px solid #e5e5e5; border-radius:8px; padding:2px 8px; width:133px; justify-content:center;">
+              <span style="font-size:12px; font-weight:300; color:#737373;">Powered by</span>
+              <svg width="34" height="13" viewBox="0 0 72 29" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.3435 4.93724C13.4796 4.93724 12.0437 5.88451 11.1882 7.50411C10.5771 5.79325 9.06233 4.93724 7.07596 4.93724C5.45636 4.93724 4.20413 5.70141 3.37873 7.0761V5.31697H0V20.1836H3.37873V11.9037C3.37873 9.3068 4.41784 7.96214 6.09807 7.96214C7.65645 7.96214 8.3588 8.92766 8.3588 10.8828V20.1836H11.6769L11.585 11.4145C11.585 8.90941 12.7154 7.96155 14.3044 7.96155C15.8015 7.96155 16.5045 8.92707 16.5045 10.8822V20.183H19.9138L19.8526 9.94734C19.8526 6.61806 18.1541 4.93724 15.3435 4.93724Z" fill="#171717"/><path d="M28.4475 4.98066C25.0959 4.98066 22.2629 7.02179 22.4454 10.7084L25.5833 10.9522C25.4309 9.03289 26.4976 7.81363 28.5388 7.81363C30.3668 7.81363 31.433 8.78857 31.433 10.0991V10.6472L28.0207 11.2259C24.2734 11.8352 22.4148 13.4195 22.4148 16.2531C22.4148 18.4467 24.0903 20.6403 27.442 20.6403C29.3006 20.6403 30.7324 19.7266 31.433 18.4773V20.1835H34.5709V10.2816C34.5715 7.02179 32.3773 4.98066 28.4475 4.98066ZM31.433 13.9682C31.433 16.1618 30.0618 17.6242 28.0813 17.6242C26.5889 17.6242 25.5828 16.9236 25.5828 15.8569C25.5828 14.6382 26.6796 14.0895 28.5076 13.7545L31.4324 13.267V13.9682H31.433Z" fill="#171717"/><path d="M37.5222 1.33514e-05V20.1835H40.8733V1.33514e-05H37.5222Z" fill="#171717"/><path d="M65.1189 4.98066C61.7673 4.98066 58.9343 7.02179 59.1168 10.7084L62.2547 10.9522C62.1022 9.03289 63.1684 7.81363 65.2102 7.81363C67.0382 7.81363 68.1044 8.78857 68.1044 10.0991V10.6472L64.6921 11.2259C60.9442 11.8352 59.0862 13.4195 59.0862 16.2531C59.0862 18.4467 60.7617 20.6403 64.1134 20.6403C65.972 20.6403 67.4038 19.7266 68.1049 18.4773V20.1835H71.2429V10.2816C71.2429 7.02179 69.0493 4.98066 65.1189 4.98066ZM68.1049 13.9682C68.1049 16.1618 66.7338 17.6242 64.7533 17.6242C63.2603 17.6242 62.2547 16.9236 62.2547 15.8569C62.2547 14.6382 63.3515 14.0895 65.1795 13.7545L68.1044 13.267V13.9682H68.1049Z" fill="#171717"/><path d="M52.7642 18.73H47.4944C46.5854 18.73 46.0338 18.2366 46.0338 17.645C46.0338 16.9544 46.5531 16.527 47.3973 16.527H50.5888C53.7379 16.527 56.3348 14.0284 56.3348 10.9052C56.3348 9.68885 55.978 8.70213 55.2309 7.78195L58.0162 7.91736L58.0233 5.31575H54.5498C53.2516 5.31575 52.375 5.16033 51.4489 5.0885C50.9968 5.01727 50.5199 4.98018 50.0224 4.98018C45.9378 4.98018 43.7065 7.24738 43.7065 10.7733C43.7065 12.417 44.4207 13.7652 45.6223 14.8832C44.0315 15.1464 42.9277 16.4616 42.9277 17.7433C42.9277 18.6964 43.3498 19.6172 44.2588 20.1759C42.9277 21.0967 42.3436 22.346 42.3436 23.9238C42.3436 26.6525 44.4536 28.5924 48.3817 28.5924H51.9853C55.4918 28.5924 58.0886 26.5866 58.0886 23.4634C58.0881 20.6699 56.0104 18.73 52.7642 18.73ZM50.0048 7.67421C52.2255 7.67421 52.9914 9.15369 52.9914 10.8063C52.9914 12.4588 52.1495 13.9383 50.0048 13.9383C47.86 13.9383 47.0182 12.4588 47.0182 10.8063C47.0182 9.15428 47.7841 7.67421 50.0048 7.67421ZM52.1472 25.8313H48.414C46.6614 25.8313 45.7842 24.8781 45.7842 23.6612C45.7842 22.7074 46.1739 21.4582 48.2515 21.4582H52.2119C53.7379 21.4582 54.6793 22.28 54.6793 23.5293C54.6793 24.9764 53.6732 25.8313 52.1472 25.8313Z" fill="#171717"/></svg>
+            </div>
+          </div>
+        </div>
 
       </div><!-- /payment-card -->
     </div><!-- /left column -->
 
     <!-- RIGHT COLUMN — Pedido -->
-    <div class="card" style="padding:24px; position:sticky; top:24px;">
-      <h2 id="order-title" style="font-size:20px; font-weight:600; margin:0 0 16px;">Pedido</h2>
+    <div class="card" style="grid-column: 8 / 12; padding:24px; position:sticky; top:24px; border-radius:14px;">
+      <h2 id="order-title" style="font-size:20px; font-weight:600; line-height:28px; margin:0 0 16px;">Pedido</h2>
       <div style="display:flex; justify-content:space-between; font-size:14px; margin-bottom:4px;">
         <span>fone de ouvido</span>
         <span style="font-weight:500;">R$ 200,00</span>
@@ -593,38 +637,6 @@
     </div>
 
   </main>
-
-  <!-- ── Loading modal ──────────────────────────────────── -->
-  <div id="loading-modal" class="modal-backdrop hidden" aria-modal="true" role="dialog">
-    <div class="modal-box" style="text-align:center;">
-      <div id="modal-spinner" class="spinner-lg" style="margin:0 auto 14px;"></div>
-      <div style="font-size:17px; font-weight:600; margin-bottom:6px;">Processando pagamento</div>
-      <div style="font-size:13px; color:var(--muted-foreground); margin-bottom:24px;">Não feche ou atualize a página</div>
-
-      <!-- Steps (shown for dual only) -->
-      <div id="modal-steps" style="display:none; text-align:left; border-top:1px solid var(--border-solid);">
-
-        <!-- Step 1 -->
-        <div style="display:flex; align-items:center; gap:12px; padding:14px 0; border-bottom:1px solid var(--border-solid);">
-          <span id="step1-icon" class="spinner-sm"></span>
-          <span style="font-size:14px; color:var(--foreground);">Autorizando 1º cartão</span>
-        </div>
-
-        <!-- Step 2 -->
-        <div style="display:flex; align-items:center; gap:12px; padding:14px 0; border-bottom:1px solid var(--border-solid);">
-          <span id="step2-icon" class="step-pending"></span>
-          <span style="font-size:14px; color:var(--foreground);">Autorizando 2º cartão</span>
-        </div>
-
-        <!-- Step 3 -->
-        <div style="display:flex; align-items:center; gap:12px; padding:14px 0;">
-          <span id="step3-icon" class="step-pending"></span>
-          <span style="font-size:14px; color:var(--foreground);">Confirmando pedido</span>
-        </div>
-
-      </div>
-    </div>
-  </div>
 
   <script>
     const TOTAL = 200;
@@ -640,13 +652,14 @@
     // ── Navegação entre views ─────────────────────────
     function goView(view) {
       currentView = view;
-      ['methods','credit','pix','dual','success'].forEach(v => {
-        document.getElementById('view-' + v).style.display = v === view ? '' : 'none';
+      ['methods','credit','pix','boleto','dual','success','error'].forEach(v => {
+        const el = document.getElementById('view-' + v);
+        if (el) el.style.display = v === view ? '' : 'none';
       });
 
-      // Colapsa/expande card de identificação (some só no dual e sucesso)
+      // Colapsa/expande card de identificação (some no dual, sucesso, loading e erro)
       const idWrap = document.getElementById('id-card-wrap');
-      if (view === 'dual' || view === 'success') {
+      if (view === 'dual' || view === 'success' || view === 'error') {
         idWrap.style.maxHeight = '0';
         idWrap.style.opacity = '0';
         idWrap.style.marginBottom = '0';
@@ -721,6 +734,14 @@
       const rows = document.getElementById('success-payment-rows');
       if (successData.method === 'pix') {
         rows.innerHTML = pixRowHTML(fmtBRL(TOTAL));
+      } else if (successData.method === 'boleto') {
+        rows.innerHTML = `<div style="display:flex; align-items:center; gap:12px; padding:12px 14px; border:1px solid var(--border-solid); border-radius:var(--radius);">
+          <span style="flex-shrink:0; width:28px; display:flex; align-items:center; justify-content:center;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="6" y1="9" x2="6" y2="15"/><line x1="10" y1="9" x2="10" y2="15"/><line x1="14" y1="9" x2="14" y2="15"/><line x1="18" y1="9" x2="18" y2="15"/></svg>
+          </span>
+          <div style="flex:1;"><div style="font-size:13px; font-weight:600;">Boleto</div><div style="font-size:12px; color:var(--muted-foreground);">Vencimento em 3 dias úteis</div></div>
+          <span style="font-size:13px; font-weight:600; flex-shrink:0;">${fmtBRL(TOTAL)}</span>
+        </div>`;
       } else if (successData.method === 'credit') {
         const c = successData.cards[0];
         rows.innerHTML = paymentRowHTML(c.num, c.last4, c.instText, fmtBRL(TOTAL));
@@ -731,11 +752,65 @@
       }
     }
 
+    function renderErrorPayment() {
+      const rows = document.getElementById('error-payment-rows');
+      const msgEl = document.getElementById('error-msg');
+      if (!rows) return;
+
+      const badgeRecusado   = `<span style="display:inline-flex; align-items:center; gap:4px; font-size:12px; font-weight:500; color:#fff; background:#9A2628; border-radius:9999px; padding:3px 10px; white-space:nowrap;"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 3L3 9M3 3L9 9" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>Recusado</span>`;
+      const badgeEstornado  = `<span style="display:inline-flex; align-items:center; gap:4px; font-size:12px; font-weight:500; color:#404040; background:#f0f0f0; border-radius:9999px; padding:3px 10px; white-space:nowrap;">&#8617; Estornado</span>`;
+      const badgeNaoCobrado = `<span style="display:inline-flex; align-items:center; gap:4px; font-size:12px; font-weight:500; color:#404040; background:#f0f0f0; border-radius:9999px; padding:3px 10px; white-space:nowrap;">&#8617; Estornado</span>`;
+
+      const cardRow = (idx, badge) =>
+        `<div style="display:flex; align-items:center; gap:12px; padding:12px 14px; border:1px solid var(--border-solid); border-radius:var(--radius);">
+          ${cardThumbnailHTML(successData.cards[idx].num)}
+          <div style="flex:1; min-width:0;">
+            <div style="font-size:13px; font-weight:600;">•••• ${successData.cards[idx].last4}</div>
+            <div style="font-size:12px; color:var(--muted-foreground);">${successData.cards[idx].instText}</div>
+          </div>
+          ${badge}
+        </div>`;
+
+      const declined = successData.declinedCard;
+
+      if (successData.cards && successData.cards.length >= 2) {
+        if (declined === 1) {
+          // Card 1 declined before card 2 was attempted
+          rows.innerHTML = cardRow(0, badgeRecusado) + cardRow(1, badgeNaoCobrado);
+          if (msgEl) msgEl.textContent = 'O primeiro cartão foi recusado e o pedido foi cancelado. Nenhum valor será cobrado.';
+        } else {
+          // Card 2 declined; card 1 was already authorized and will be reversed
+          rows.innerHTML = cardRow(0, badgeEstornado) + cardRow(1, badgeRecusado);
+          if (msgEl) msgEl.textContent = 'O segundo cartão foi recusado. O valor do primeiro cartão será estornado automaticamente.';
+        }
+      } else if (successData.cards && successData.cards.length === 1) {
+        rows.innerHTML = cardRow(0, badgeRecusado);
+        if (msgEl) msgEl.textContent = 'O cartão foi recusado e o pedido foi cancelado. Nenhum valor será cobrado.';
+      } else {
+        rows.innerHTML = '';
+        if (msgEl) msgEl.textContent = 'O pagamento foi recusado e o pedido foi cancelado.';
+      }
+    }
+
+    function triggerErrorTest() {
+      const raw1 = document.getElementById('c1-number')?.value || '4111 1111 1111 1111';
+      const raw2 = document.getElementById('c2-number')?.value || '5500 0000 0000 0004';
+      successData = {
+        method: 'dual',
+        cards: [
+          { num: raw1, last4: raw1.replace(/\s/g,'').slice(-4) || '1111', instText: '1x de R$ 100,00 sem juros', amount: fmtBRL(v3Card1.amount) },
+          { num: raw2, last4: raw2.replace(/\s/g,'').slice(-4) || '0004', instText: '1x de R$ 100,00 sem juros', amount: fmtBRL(v3Card2.amount) }
+        ]
+      };
+      renderErrorPayment();
+      goView('error');
+    }
+
     // ── Navegação entre passos ────────────────────────
     function dualGoPassoV3(passo) {
-      document.getElementById('dual-passo1').style.display = passo === 'passo1' ? '' : 'none';
+      document.getElementById('dual-passo1').style.display = passo === 'passo1' ? 'flex' : 'none';
       document.getElementById('dual-passo2').style.display = passo === 'passo2' ? '' : 'none';
-      const teal = 'var(--teal)', gray = 'rgba(37,124,112,0.2)';
+      const teal = 'var(--teal)', gray = 'rgba(20,127,112,0.2)';
       const label = document.getElementById('dual-step-label');
       if (passo === 'passo1') {
         document.getElementById('prog-bar-1').style.background = teal;
@@ -752,12 +827,13 @@
 
     // ── Parcelamento do cartão 1 ──────────────────────
     function initC1Installments(v1) {
-      const max = 6;
-      document.getElementById('c1-inst').innerHTML =
+      const sel = document.getElementById('c1-inst');
+      sel.innerHTML =
         '<option value="" disabled selected>Selecione</option>' +
-        Array.from({ length: max }, (_, i) => i + 1)
+        Array.from({ length: 6 }, (_, i) => i + 1)
           .map(n => `<option value="${n}">${n}x de ${fmtBRL(v1 / n)} sem juros</option>`)
           .join('');
+      sel.style.color = 'var(--muted-foreground)';
     }
 
     // ── Inputs de divisão ─────────────────────────────
@@ -811,11 +887,10 @@
       document.getElementById('recap-amount').textContent = fmtBRL(v3Card1.amount);
       document.getElementById('card2-amount-label').textContent = fmtBRL(v3Card2.amount);
 
-      // Parcelamento do cartão 2
+      // Parcelamento do cartão 2 — padrão 1x selecionado
       document.getElementById('c2-inst').innerHTML =
-        '<option value="" disabled selected>Selecione</option>' +
         Array.from({ length: 6 }, (_, i) => i + 1)
-          .map(n => `<option value="${n}">${n}x de ${fmtBRL(v3Card2.amount / n)} sem juros</option>`)
+          .map((n, i) => `<option value="${n}"${i === 0 ? ' selected' : ''}>${n}x de ${fmtBRL(v3Card2.amount / n)} sem juros</option>`)
           .join('');
 
       dualGoPassoV3('passo2');
@@ -895,8 +970,11 @@
     }
 
     function validatePasso1() {
+      const sel = document.getElementById('c1-inst');
+      const instOk = sel.value !== '';
+      sel.style.color = instOk ? 'var(--foreground)' : 'var(--muted-foreground)';
       document.getElementById('btn-continuar-passo1').disabled =
-        !isCardValid('c1-number', 'c1-expiry', 'c1-cvv', 'c1-name');
+        !isCardValid('c1-number', 'c1-expiry', 'c1-cvv', 'c1-name') || !instOk;
     }
 
     function validatePasso2() {
@@ -904,101 +982,158 @@
         !isCardValid('c2-number', 'c2-expiry', 'c2-cvv', 'c2-name');
     }
 
+    // ── SVG icon strings (Figma Malga DS) ─────────────
+    const SVG_LOADER_LG = `<svg class="icon-spin" width="32" height="32" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M25 13.0006C24.9999 15.5347 24.1975 18.0037 22.7079 20.0538C21.2183 22.1039 19.1179 23.6298 16.7078 24.4128C14.2977 25.1958 11.7016 25.1957 9.29152 24.4126C6.88145 23.6294 4.78117 22.1034 3.29169 20.0533C1.8022 18.0031 0.999982 15.534 1 12.9999C1.00002 10.4658 1.80227 7.99673 3.29179 5.94659C4.7813 3.89644 6.88161 2.37047 9.29169 1.58736C11.7018 0.804249 14.2979 0.804214 16.708 1.58726" stroke="#0A0A0A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+    const SVG_LOADER_SM = `<svg class="icon-spin" width="20" height="20" viewBox="0 0 16.67 16.67" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.835 8.33537C15.8349 9.91919 15.3334 11.4623 14.4024 12.7436C13.4714 14.0249 12.1587 14.9786 10.6524 15.468C9.14608 15.9574 7.5235 15.9573 6.0172 15.4679C4.51091 14.9784 3.19823 14.0246 2.2673 12.7433C1.33638 11.4619 0.834989 9.91877 0.835 8.33495C0.835011 6.75112 1.33642 5.20796 2.26737 3.92662C3.19831 2.64528 4.511 1.69154 6.0173 1.2021C7.5236 0.712656 9.14619 0.712633 10.6525 1.20203" stroke="#0A0A0A" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+    const SVG_CIRCLE_CHECK = `<svg width="20" height="20" viewBox="0 0 18.3367 18.3367" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6.66833 9.16833L8.335 10.835L11.6683 7.50167M17.5017 9.16833C17.5017 13.7707 13.7707 17.5017 9.16833 17.5017C4.56596 17.5017 0.835 13.7707 0.835 9.16833C0.835 4.56596 4.56596 0.835 9.16833 0.835C13.7707 0.835 17.5017 4.56596 17.5017 9.16833Z" stroke="#00AE42" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+    const SVG_CIRCLE     = `<svg width="20" height="20" viewBox="0 0 18.3367 18.3367" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9.16833 17.5017C13.7707 17.5017 17.5017 13.7707 17.5017 9.16833C17.5017 4.56596 13.7707 0.835 9.16833 0.835C4.56596 0.835 0.835 4.56596 0.835 9.16833C0.835 13.7707 4.56596 17.5017 9.16833 17.5017Z" stroke="#737373" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+    const SVG_CIRCLE_X   = `<svg width="20" height="20" viewBox="0 0 18.3367 18.3367" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M11.6683 6.66833L6.66833 11.6683M6.66833 6.66833L11.6683 11.6683M17.5017 9.16833C17.5017 13.7707 13.7707 17.5017 9.16833 17.5017C4.56596 17.5017 0.835 13.7707 0.835 9.16833C0.835 4.56596 4.56596 0.835 9.16833 0.835C13.7707 0.835 17.5017 4.56596 17.5017 9.16833Z" stroke="#D53437" stroke-width="1.67" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+
     // ── Helpers de ícone de step ──────────────────────
-    function setStepDone(id) {
-      const el = document.getElementById(id);
-      el.className = 'step-done';
-      el.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+    function setStepDone(id)    { document.getElementById(id).innerHTML = SVG_CIRCLE_CHECK; }
+    function setStepError(id)   { document.getElementById(id).innerHTML = SVG_CIRCLE_X; }
+    function setStepSpinner(id) { document.getElementById(id).innerHTML = SVG_LOADER_SM; }
+    function setStepPending(id) { document.getElementById(id).innerHTML = SVG_CIRCLE; }
+
+    // ── Loading overlay ───────────────────────────────
+    function showLoadingOverlay() {
+      const el = document.getElementById('loading-overlay');
+      el.style.display = 'flex';
     }
-    function setStepSpinner(id) {
-      const el = document.getElementById(id);
-      el.className = 'spinner-sm';
-      el.innerHTML = '';
+    function hideLoadingOverlay() {
+      const el = document.getElementById('loading-overlay');
+      el.style.display = 'none';
     }
 
-    // ── Loading modal ─────────────────────────────────
-    function showLoadingModal(isDual) {
-      const modal  = document.getElementById('loading-modal');
-      const steps  = document.getElementById('modal-steps');
+    function showLoadingModal(isDual, declinedCard) {
+      const steps   = document.getElementById('modal-steps');
       const spinner = document.getElementById('modal-spinner');
 
-      // Reset step icons
-      ['step1-icon','step2-icon','step3-icon'].forEach(id => {
-        const el = document.getElementById(id);
-        el.className = 'step-pending';
-        el.innerHTML = '';
-      });
+      spinner.innerHTML = SVG_LOADER_LG;
+      setStepPending('step1-icon');
+      setStepPending('step2-icon');
+      setStepPending('step3-icon');
 
       if (isDual) {
-        steps.style.display = '';
-        setStepSpinner('step1-icon');  // step1 active
-        spinner.style.display = 'inline-block';
+        steps.style.display = 'flex';
+        setStepSpinner('step1-icon');
+        setStepSpinner('step2-icon');
       } else {
         steps.style.display = 'none';
-        spinner.style.display = 'inline-block';
       }
 
-      modal.classList.remove('hidden');
+      showLoadingOverlay();
 
       if (isDual) {
-        // 2 s — step 1 done, step 2 starts
-        setTimeout(() => {
-          setStepDone('step1-icon');
-          setStepSpinner('step2-icon');
-        }, 2000);
-        // 4.2 s — step 2 done, step 3 starts
-        setTimeout(() => {
-          setStepDone('step2-icon');
-          setStepSpinner('step3-icon');
-        }, 4200);
-        // 6.2 s — step 3 done
-        setTimeout(() => {
-          setStepDone('step3-icon');
-          spinner.style.display = 'none';
-        }, 6200);
-        // 7 s — fecha modal e vai para sucesso
-        setTimeout(() => {
-          modal.classList.add('hidden');
-          goView('success');
-        }, 7000);
+        if (declinedCard === 1) {
+          // Cartão 1 recusado — falha no passo 1
+          setTimeout(() => {
+            setStepError('step1-icon');
+            setStepPending('step2-icon');
+            setStepPending('step3-icon');
+            spinner.innerHTML = '';
+          }, 2000);
+          setTimeout(() => { hideLoadingOverlay(); renderErrorPayment(); goView('error'); }, 2700);
+
+        } else if (declinedCard === 2) {
+          // Cartão 1 ok, cartão 2 recusado — falha no passo 2
+          setTimeout(() => {
+            setStepDone('step1-icon');
+            setStepSpinner('step2-icon');
+          }, 2000);
+          setTimeout(() => {
+            setStepError('step2-icon');
+            setStepError('step3-icon');
+            spinner.innerHTML = '';
+          }, 4200);
+          setTimeout(() => { hideLoadingOverlay(); renderErrorPayment(); goView('error'); }, 4900);
+
+        } else {
+          // Fluxo de sucesso
+          setTimeout(() => { setStepDone('step1-icon'); setStepSpinner('step2-icon'); }, 2000);
+          setTimeout(() => { setStepDone('step2-icon'); setStepSpinner('step3-icon'); }, 4200);
+          setTimeout(() => { setStepDone('step3-icon'); spinner.innerHTML = ''; }, 6200);
+          setTimeout(() => { hideLoadingOverlay(); goView('success'); }, 7000);
+        }
+
       } else {
-        // Spinner simples por 5 s (2 s originais + 3 s adicionados)
-        setTimeout(() => {
-          modal.classList.add('hidden');
-          goView('success');
-        }, 5000);
+        // Pagamento simples (crédito, pix, boleto)
+        if (declinedCard) {
+          setTimeout(() => { hideLoadingOverlay(); renderErrorPayment(); goView('error'); }, 3000);
+        } else {
+          setTimeout(() => { hideLoadingOverlay(); goView('success'); }, 5000);
+        }
       }
     }
 
     // ── Finalizar pagamento ───────────────────────────
     function handlePay() {
-      // Captura dados antes de abrir o modal
+      let declinedCard = null;
+
       if (currentView === 'credit') {
         const raw = document.getElementById('sc-num').value;
+        const cvv = document.getElementById('sc-cvv').value;
         const sel = document.querySelector('#view-credit select');
+        if (cvv === '666') declinedCard = 1;
         successData = {
-          method: 'credit',
+          method: 'credit', declinedCard,
           cards: [{ num: raw, last4: raw.replace(/\s/g,'').slice(-4), instText: sel?.options[sel.selectedIndex]?.text || '' }]
         };
       } else if (currentView === 'pix') {
-        successData = { method: 'pix' };
+        successData = { method: 'pix', declinedCard: null };
+      } else if (currentView === 'boleto') {
+        successData = { method: 'boleto', declinedCard: null };
       } else if (currentView === 'dual') {
         const raw1 = document.getElementById('c1-number').value;
         const sel1 = document.getElementById('c1-inst');
         const raw2 = document.getElementById('c2-number').value;
         const sel2 = document.getElementById('c2-inst');
+        const cvv1 = document.getElementById('c1-cvv').value;
+        const cvv2 = document.getElementById('c2-cvv').value;
+        if (cvv1 === '666') declinedCard = 1;
+        else if (cvv2 === '666') declinedCard = 2;
         successData = {
-          method: 'dual',
+          method: 'dual', declinedCard,
           cards: [
             { num: raw1, last4: raw1.replace(/\s/g,'').slice(-4), instText: sel1?.options[sel1.selectedIndex]?.text || '', amount: fmtBRL(v3Card1.amount) },
             { num: raw2, last4: raw2.replace(/\s/g,'').slice(-4), instText: sel2?.options[sel2.selectedIndex]?.text || '', amount: fmtBRL(v3Card2.amount) }
           ]
         };
       }
-      showLoadingModal(currentView === 'dual');
+
+      showLoadingModal(currentView === 'dual', declinedCard);
     }
 
     function toggleId() { /* placeholder */ }
   </script>
+  <!-- ═══ MODAL: Loading (fixed, full-viewport) ═══ -->
+  <div id="loading-overlay" style="display:none; position:fixed; inset:0; z-index:1000; background:rgba(23,23,23,0.4); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); align-items:center; justify-content:center;">
+    <div style="background:#fafafa; border-radius:10px; border:1px solid #e5e5e5; padding:24px; width:425px; box-shadow:0 10px 7.5px rgba(10,10,10,0.1), 0 4px 3px rgba(10,10,10,0.1); display:flex; flex-direction:column; gap:24px; box-sizing:border-box;">
+      <div style="display:flex; flex-direction:column; gap:16px;">
+        <div id="modal-spinner" style="width:32px; height:32px; flex-shrink:0;"></div>
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <div style="font-size:18px; font-weight:600; color:#0a0a0a; line-height:1;">Processando pagamento</div>
+          <div style="font-size:14px; color:#737373; line-height:20px;">Não feche ou atualize a página</div>
+        </div>
+      </div>
+      <div id="modal-steps" style="display:none; flex-direction:column; gap:10px;">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <span id="step1-icon" style="display:flex; flex-shrink:0; width:20px; height:20px;"></span>
+          <span style="font-size:14px; color:#0a0a0a; line-height:20px;">Autorizando 1º cartão</span>
+        </div>
+        <div style="height:1px; background:#e5e5e5;"></div>
+        <div style="display:flex; align-items:center; gap:10px;">
+          <span id="step2-icon" style="display:flex; flex-shrink:0; width:20px; height:20px;"></span>
+          <span style="font-size:14px; color:#0a0a0a; line-height:20px;">Autorizando 2º cartão</span>
+        </div>
+        <div style="height:1px; background:#e5e5e5;"></div>
+        <div style="display:flex; align-items:center; gap:10px;">
+          <span id="step3-icon" style="display:flex; flex-shrink:0; width:20px; height:20px;"></span>
+          <span style="font-size:14px; color:#0a0a0a; line-height:20px;">Confirmando pedido</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </body>
 </html>
