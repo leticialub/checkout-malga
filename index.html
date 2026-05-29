@@ -598,26 +598,7 @@
         <!-- ═══ VIEW: Loading ═══ -->
         <!-- ═══ MODAL OVERLAY: Loading ═══ -->
 
-        <!-- ═══ VIEW: Erro ═══ -->
-        <div id="view-error" style="display:none;">
-          <div style="display:flex; align-items:center; gap:12px; margin-bottom:20px;">
-            <div style="width:42px; height:42px; flex-shrink:0; border-radius:30px; background:#ef4444; display:flex; align-items:center; justify-content:center;">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-            </div>
-            <h2 style="font-size:20px; font-weight:600; margin:0; color:var(--foreground);">Transação não aprovada</h2>
-          </div>
-          <div class="card" style="padding:20px; margin-bottom:16px;">
-            <div id="error-msg" style="font-size:14px; color:var(--muted-foreground); margin-bottom:16px;">O cartão foi recusado e o pedido foi cancelado. Nenhum valor será cobrado.</div>
-            <div style="display:flex; flex-direction:column; gap:10px;" id="error-payment-rows"></div>
-          </div>
-          <button class="btn-primary" onclick="goView('dual')" style="background:#0a0a0a;">Tentar novamente</button>
-          <div style="display:flex; justify-content:center; margin-top:14px;">
-            <div style="display:inline-flex; align-items:center; gap:6px; border:1px solid #e5e5e5; border-radius:8px; padding:2px 8px; width:133px; justify-content:center;">
-              <span style="font-size:12px; font-weight:300; color:#737373;">Powered by</span>
-              <svg width="34" height="13" viewBox="0 0 72 29" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.3435 4.93724C13.4796 4.93724 12.0437 5.88451 11.1882 7.50411C10.5771 5.79325 9.06233 4.93724 7.07596 4.93724C5.45636 4.93724 4.20413 5.70141 3.37873 7.0761V5.31697H0V20.1836H3.37873V11.9037C3.37873 9.3068 4.41784 7.96214 6.09807 7.96214C7.65645 7.96214 8.3588 8.92766 8.3588 10.8828V20.1836H11.6769L11.585 11.4145C11.585 8.90941 12.7154 7.96155 14.3044 7.96155C15.8015 7.96155 16.5045 8.92707 16.5045 10.8822V20.183H19.9138L19.8526 9.94734C19.8526 6.61806 18.1541 4.93724 15.3435 4.93724Z" fill="#171717"/><path d="M28.4475 4.98066C25.0959 4.98066 22.2629 7.02179 22.4454 10.7084L25.5833 10.9522C25.4309 9.03289 26.4976 7.81363 28.5388 7.81363C30.3668 7.81363 31.433 8.78857 31.433 10.0991V10.6472L28.0207 11.2259C24.2734 11.8352 22.4148 13.4195 22.4148 16.2531C22.4148 18.4467 24.0903 20.6403 27.442 20.6403C29.3006 20.6403 30.7324 19.7266 31.433 18.4773V20.1835H34.5709V10.2816C34.5715 7.02179 32.3773 4.98066 28.4475 4.98066ZM31.433 13.9682C31.433 16.1618 30.0618 17.6242 28.0813 17.6242C26.5889 17.6242 25.5828 16.9236 25.5828 15.8569C25.5828 14.6382 26.6796 14.0895 28.5076 13.7545L31.4324 13.267V13.9682H31.433Z" fill="#171717"/><path d="M37.5222 1.33514e-05V20.1835H40.8733V1.33514e-05H37.5222Z" fill="#171717"/><path d="M65.1189 4.98066C61.7673 4.98066 58.9343 7.02179 59.1168 10.7084L62.2547 10.9522C62.1022 9.03289 63.1684 7.81363 65.2102 7.81363C67.0382 7.81363 68.1044 8.78857 68.1044 10.0991V10.6472L64.6921 11.2259C60.9442 11.8352 59.0862 13.4195 59.0862 16.2531C59.0862 18.4467 60.7617 20.6403 64.1134 20.6403C65.972 20.6403 67.4038 19.7266 68.1049 18.4773V20.1835H71.2429V10.2816C71.2429 7.02179 69.0493 4.98066 65.1189 4.98066ZM68.1049 13.9682C68.1049 16.1618 66.7338 17.6242 64.7533 17.6242C63.2603 17.6242 62.2547 16.9236 62.2547 15.8569C62.2547 14.6382 63.3515 14.0895 65.1795 13.7545L68.1044 13.267V13.9682H68.1049Z" fill="#171717"/><path d="M52.7642 18.73H47.4944C46.5854 18.73 46.0338 18.2366 46.0338 17.645C46.0338 16.9544 46.5531 16.527 47.3973 16.527H50.5888C53.7379 16.527 56.3348 14.0284 56.3348 10.9052C56.3348 9.68885 55.978 8.70213 55.2309 7.78195L58.0162 7.91736L58.0233 5.31575H54.5498C53.2516 5.31575 52.375 5.16033 51.4489 5.0885C50.9968 5.01727 50.5199 4.98018 50.0224 4.98018C45.9378 4.98018 43.7065 7.24738 43.7065 10.7733C43.7065 12.417 44.4207 13.7652 45.6223 14.8832C44.0315 15.1464 42.9277 16.4616 42.9277 17.7433C42.9277 18.6964 43.3498 19.6172 44.2588 20.1759C42.9277 21.0967 42.3436 22.346 42.3436 23.9238C42.3436 26.6525 44.4536 28.5924 48.3817 28.5924H51.9853C55.4918 28.5924 58.0886 26.5866 58.0886 23.4634C58.0881 20.6699 56.0104 18.73 52.7642 18.73ZM50.0048 7.67421C52.2255 7.67421 52.9914 9.15369 52.9914 10.8063C52.9914 12.4588 52.1495 13.9383 50.0048 13.9383C47.86 13.9383 47.0182 12.4588 47.0182 10.8063C47.0182 9.15428 47.7841 7.67421 50.0048 7.67421ZM52.1472 25.8313H48.414C46.6614 25.8313 45.7842 24.8781 45.7842 23.6612C45.7842 22.7074 46.1739 21.4582 48.2515 21.4582H52.2119C53.7379 21.4582 54.6793 22.28 54.6793 23.5293C54.6793 24.9764 53.6732 25.8313 52.1472 25.8313Z" fill="#171717"/></svg>
-            </div>
-          </div>
-        </div>
+        <!-- ═══ MODAL: Erro (ver #error-overlay abaixo do </body>) ═══ -->
 
       </div><!-- /payment-card -->
     </div><!-- /left column -->
@@ -652,14 +633,14 @@
     // ── Navegação entre views ─────────────────────────
     function goView(view) {
       currentView = view;
-      ['methods','credit','pix','boleto','dual','success','error'].forEach(v => {
+      ['methods','credit','pix','boleto','dual','success'].forEach(v => {
         const el = document.getElementById('view-' + v);
         if (el) el.style.display = v === view ? '' : 'none';
       });
 
       // Colapsa/expande card de identificação (some no dual, sucesso, loading e erro)
       const idWrap = document.getElementById('id-card-wrap');
-      if (view === 'dual' || view === 'success' || view === 'error') {
+      if (view === 'dual' || view === 'success') {
         idWrap.style.maxHeight = '0';
         idWrap.style.opacity = '0';
         idWrap.style.marginBottom = '0';
@@ -764,16 +745,15 @@
       const declineReason = `Pagamento recusado por: saldo ou limite insuficiente. Use outro cartão ou tente novamente após ajustar seu limite.`;
 
       const cardRow = (idx, badge, showReason = false) =>
-        `<div style="display:flex; flex-direction:column; border:1px solid var(--border-solid); border-radius:var(--radius); overflow:hidden;">
-          <div style="display:flex; align-items:center; gap:12px; padding:12px 14px;">
-            ${cardThumbnailHTML(successData.cards[idx].num)}
-            <div style="flex:1; min-width:0;">
-              <div style="font-size:13px; font-weight:600;">•••• ${successData.cards[idx].last4}</div>
-              <div style="font-size:12px; color:var(--muted-foreground);">${successData.cards[idx].instText}</div>
+        `<div style="background:#fafafa; border:1px solid #e5e5e5; border-radius:16px; padding:16px 24px; box-shadow:0 1px 3px rgba(10,10,10,0.1),0 1px 2px -1px rgba(10,10,10,0.1);">
+          <div style="display:flex; align-items:center; justify-content:space-between;">
+            <div style="display:flex; align-items:center; gap:8px;">
+              ${cardThumbnailHTML(successData.cards[idx].num)}
+              <span style="font-size:16px; font-weight:600; color:#0a0a0a; line-height:1;">•••• ${successData.cards[idx].last4}</span>
             </div>
             ${badge}
           </div>
-          ${showReason ? `<div style="border-top:1px solid var(--border-solid); padding:10px 14px; font-size:12px; color:var(--muted-foreground); line-height:18px;">${declineReason}</div>` : ''}
+          ${showReason ? `<p style="margin:10px 0 0; font-size:14px; color:#737373; line-height:20px;">${declineReason}</p>` : ''}
         </div>`;
 
       const declined = successData.declinedCard;
@@ -1000,6 +980,16 @@
     function setStepSpinner(id) { document.getElementById(id).innerHTML = SVG_LOADER_SM; }
     function setStepPending(id) { document.getElementById(id).innerHTML = SVG_CIRCLE; }
 
+    // ── Error overlay ─────────────────────────────────
+    function showErrorOverlay() {
+      const el = document.getElementById('error-overlay');
+      el.style.display = 'flex';
+    }
+    function hideErrorOverlay() {
+      const el = document.getElementById('error-overlay');
+      el.style.display = 'none';
+    }
+
     // ── Loading overlay ───────────────────────────────
     function showLoadingOverlay() {
       const el = document.getElementById('loading-overlay');
@@ -1038,7 +1028,7 @@
             setStepPending('step3-icon');
             spinner.innerHTML = '';
           }, 2000);
-          setTimeout(() => { hideLoadingOverlay(); renderErrorPayment(); goView('error'); }, 2700);
+          setTimeout(() => { hideLoadingOverlay(); renderErrorPayment(); showErrorOverlay(); }, 2700);
 
         } else if (declinedCard === 2) {
           // Cartão 1 ok, cartão 2 recusado — falha no passo 2
@@ -1051,7 +1041,7 @@
             setStepError('step3-icon');
             spinner.innerHTML = '';
           }, 4200);
-          setTimeout(() => { hideLoadingOverlay(); renderErrorPayment(); goView('error'); }, 4900);
+          setTimeout(() => { hideLoadingOverlay(); renderErrorPayment(); showErrorOverlay(); }, 4900);
 
         } else {
           // Fluxo de sucesso
@@ -1064,7 +1054,7 @@
       } else {
         // Pagamento simples (crédito, pix, boleto)
         if (declinedCard) {
-          setTimeout(() => { hideLoadingOverlay(); renderErrorPayment(); goView('error'); }, 3000);
+          setTimeout(() => { hideLoadingOverlay(); renderErrorPayment(); showErrorOverlay(); }, 3000);
         } else {
           setTimeout(() => { hideLoadingOverlay(); goView('success'); }, 5000);
         }
@@ -1111,6 +1101,28 @@
 
     function toggleId() { /* placeholder */ }
   </script>
+  <!-- ═══ MODAL: Erro (fixed, full-viewport) ═══ -->
+  <div id="error-overlay" style="display:none; position:fixed; inset:0; z-index:1000; background:rgba(23,23,23,0.4); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); align-items:center; justify-content:center;">
+    <div style="background:#fafafa; border-radius:10px; border:1px solid #e5e5e5; padding:24px; width:425px; box-shadow:0 10px 7.5px rgba(10,10,10,0.1), 0 4px 3px rgba(10,10,10,0.1); display:flex; flex-direction:column; gap:24px; box-sizing:border-box;">
+      <!-- Header -->
+      <div style="display:flex; flex-direction:column; gap:16px;">
+        <div style="width:32px; height:32px; border-radius:30px; background:#d53437; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <div style="font-size:18px; font-weight:600; color:#0a0a0a; line-height:1;">Transação não aprovada</div>
+          <div id="error-msg" style="font-size:14px; color:#737373; line-height:20px;">O cartão foi recusado e o pedido foi cancelado. Nenhum valor será cobrado.</div>
+        </div>
+      </div>
+      <!-- Cards -->
+      <div id="error-payment-rows" style="display:flex; flex-direction:column; gap:8px;"></div>
+      <!-- Footer -->
+      <div style="display:flex; justify-content:flex-end;">
+        <button onclick="hideErrorOverlay(); goView('dual');" style="height:36px; padding:0 16px; background:#257c70; color:#fafafa; border:none; border-radius:8px; font-size:14px; font-weight:500; font-family:inherit; cursor:pointer;">Tentar novamente</button>
+      </div>
+    </div>
+  </div>
+
   <!-- ═══ MODAL: Loading (fixed, full-viewport) ═══ -->
   <div id="loading-overlay" style="display:none; position:fixed; inset:0; z-index:1000; background:rgba(23,23,23,0.4); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); align-items:center; justify-content:center;">
     <div style="background:#fafafa; border-radius:10px; border:1px solid #e5e5e5; padding:24px; width:425px; box-shadow:0 10px 7.5px rgba(10,10,10,0.1), 0 4px 3px rgba(10,10,10,0.1); display:flex; flex-direction:column; gap:24px; box-sizing:border-box;">
