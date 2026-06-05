@@ -1151,11 +1151,25 @@
     document.getElementById('empty-state').classList.remove('visible');
     document.querySelector('.table-wrap').style.display = '';
     document.querySelector('.pagination').style.display = '';
+    updateSearchUrl('', null);
+  }
+
+  function updateSearchUrl(val, key) {
+    const url = new URL(window.location.href);
+    if (val) {
+      url.searchParams.set('q', val);
+      if (key) url.searchParams.set('type', key);
+    } else {
+      url.searchParams.delete('q');
+      url.searchParams.delete('type');
+    }
+    window.history.pushState({}, '', url.toString());
   }
 
   function onSearchInput() {
     const val = document.getElementById('search-input').value.trim().toLowerCase();
     document.getElementById('search-clear-btn').style.display = val ? '' : 'none';
+    updateSearchUrl(val, searchType ? searchType.key : null);
     if (!searchType) return;
     const key = searchType ? searchType.key : null;
     const rows = document.querySelectorAll('#charges-tbody tr');
