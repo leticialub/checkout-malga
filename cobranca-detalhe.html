@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Detalhe da Cobrança | Malga Dashboard</title>
+  <!-- MAZE TRACKING SNIPPET -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --background:       #0a0a0b;
+      --sidebar-bg:       #111113;
+      --sidebar-border:   #1f1f23;
+      --card:             #111113;
+      --border:           #27272a;
+      --border-subtle:    #1e1e22;
+      --input-bg:         #18181b;
+      --muted-fg:         #71717a;
+      --foreground:       #fafafa;
+      --foreground-2:     #d4d4d8;
+
+      /* brand */
+      --primary:          #147f70;
+
+      /* status */
+      --status-green:     #4ade80;
+      --status-green-bg:  rgba(74, 222, 128, 0.08);
+      --status-red:       #f87171;
+      --status-red-bg:    rgba(248, 113, 113, 0.08);
+      --status-purple:    #c084fc;
+      --status-purple-bg: rgba(192, 132, 252, 0.08);
+      --status-yellow:    #facc15;
+      --status-yellow-bg: rgba(250, 204, 21, 0.08);
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: oklch(0.2046 0 0);
+      color: var(--foreground);
+      min-height: 100vh;
+      display: flex;
+      font-size: 16px;
+      line-height: 24px;
+      font-optical-sizing: auto;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Sidebar ── */
+    .sidebar {
+      width: 272px;
+      flex-shrink: 0;
+      background: oklch(0.2046 0 0);
+      border-right: 1px solid var(--sidebar-border);
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      position: sticky;
+      top: 0;
+    }
+
+    .sidebar-logo {
+      padding: 18px 16px 14px;
+      display: flex;
+      align-items: center;
+    }
+
+    .sidebar-logo svg { display: block; }
+
+    .sidebar-nav {
+      flex: 1;
+      padding: 4px 8px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .nav-group { display: flex; flex-direction: column; gap: 4px; }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px;
+      height: 32px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 400;
+      color: oklch(0.9851 0 0);
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.1s, color 0.1s;
+      position: relative;
+    }
+    .nav-item:hover { background: rgba(255,255,255,0.05); }
+    .nav-item.active { background: oklch(0.2686 0 0); color: oklch(0.9851 0 0); font-weight: 500; }
+    .nav-item .nav-icon { width: 16px; height: 16px; flex-shrink: 0; }
+    .nav-item .nav-chevron { margin-left: auto; width: 14px; height: 14px; }
+
+    .nav-sub {
+      padding-left: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .nav-sub .nav-item {
+      font-size: 14px;
+      color: oklch(0.9851 0 0);
+      height: 28px;
+      padding: 4px 8px;
+    }
+    .nav-sub .nav-item:hover { color: var(--foreground); }
+
+    .sidebar-user {
+      padding: 10px 8px;
+      border-top: 1px solid var(--sidebar-border);
+    }
+    .sidebar-user-inner {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 8px;
+      border-radius: 8px;
+      cursor: pointer;
+      min-width: 0;
+    }
+    .sidebar-user-inner:hover { background: rgba(255,255,255,0.05); }
+    .sidebar-avatar {
+      width: 32px; height: 32px;
+      border-radius: 10px;
+      background: oklch(0.7293 0.1161 182.07);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 400; color: #fff;
+      flex-shrink: 0;
+    }
+    .sidebar-user-name {
+      font-size: 14px; font-weight: 500;
+      color: oklch(0.9851 0 0);
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .sidebar-user-email {
+      font-size: 12px; font-weight: 400;
+      color: oklch(0.7155 0 0);
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+
+    /* ── Main layout ── */
+    .main-wrap {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      margin: 16px 16px 16px 0;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.10);
+      background: oklch(0.1448 0 0);
+      overflow-y: auto;
+    }
+
+    /* ── Top bar ── */
+    .topbar {
+      height: 52px;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 24px;
+      background: var(--background);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .topbar-toggle {
+      color: var(--muted-fg);
+      background: none;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      padding: 4px;
+      border-radius: 5px;
+    }
+    .topbar-toggle:hover { color: var(--foreground); background: rgba(255,255,255,0.05); }
+
+    .search-wrap {
+      margin-left: auto;
+      width: 480px;
+      position: relative;
+    }
+    .search-field {
+      width: 100%;
+      height: 36px;
+      background: rgba(255,255,255,0.045);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0 12px 0 10px;
+      cursor: text;
+    }
+    .search-field-icon { flex-shrink: 0; color: oklch(0.7155 0 0); display: flex; }
+    .search-input {
+      flex: 1;
+      background: none;
+      border: none;
+      outline: none;
+      font-size: 14px;
+      color: var(--foreground-2);
+      font-family: inherit;
+      min-width: 0;
+    }
+    .search-input::placeholder { color: oklch(0.7155 0 0); }
+
+    /* ── Content ── */
+    .content { flex: 1; }
+    .content-inner {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      padding: 16px;
+      width: 100%;
+      max-width: 1536px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    @media (min-width: 768px) {
+      .content-inner {
+        gap: 24px;
+        padding: 24px;
+      }
+    }
+
+    /* ── Status badges ── */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      padding: 2px 8px;
+      height: 22px;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 500;
+      white-space: nowrap;
+      border: 1px solid rgba(255,255,255,0.10);
+      color: oklch(0.9702 0 0);
+      transition: color 0.1s;
+      overflow: hidden;
+    }
+    .badge-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .badge-autorizada { background: transparent; }
+    .badge-autorizada .badge-dot { background: var(--status-green); }
+    .badge-recusada { background: transparent; }
+    .badge-recusada .badge-dot { background: var(--status-red); }
+    .badge-pendente { background: transparent; }
+    .badge-pendente .badge-dot { background: var(--status-purple); }
+    .badge-pago { background: transparent; }
+    .badge-pago .badge-dot { background: #34d399; }
+    .badge-falha { background: transparent; }
+    .badge-falha .badge-dot { background: var(--status-red); }
+    .badge-estornada { background: transparent; }
+    .badge-estornada .badge-dot { background: #60a5fa; }
+
+    /* Breadcrumb */
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 14px;
+      color: oklch(0.7155 0 0);
+      margin-bottom: 20px;
+    }
+    .breadcrumb a {
+      color: oklch(0.7155 0 0);
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .breadcrumb a:hover { color: oklch(0.9702 0 0); }
+    .breadcrumb-sep { color: oklch(0.5 0 0); font-size: 12px; }
+    .breadcrumb-current { color: oklch(0.9702 0 0); font-weight: 500; }
+
+    /* Detail page header */
+    .detail-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .detail-header-left { display: flex; flex-direction: column; gap: 6px; }
+    .detail-amount-row { display: flex; align-items: center; gap: 8px; }
+    .detail-amount {
+      font-size: 24px;
+      font-weight: 600;
+      color: oklch(0.9851 0 0);
+      line-height: 1.2;
+    }
+    .detail-subtitle {
+      font-size: 14px;
+      color: oklch(0.7155 0 0);
+      line-height: 20px;
+    }
+    .detail-subtitle a {
+      color: oklch(0.5608 0.1779 170.45);
+      text-decoration: none;
+    }
+    .detail-subtitle a:hover { text-decoration: underline; }
+    .btn-estornar {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 12px;
+      height: auto;
+      border-radius: 8px;
+      border: none;
+      background: oklch(0.7293 0.1161 182.07);
+      color: oklch(0.1448 0 0);
+      font-size: 14px;
+      font-weight: 500;
+      font-family: inherit;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.1s;
+      flex-shrink: 0;
+    }
+    .btn-estornar:hover { background: oklch(0.69 0.1161 182.07); }
+
+    /* Detail cards */
+    .detail-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .detail-card {
+      border: 1px solid oklch(0.9851 0 0 / 0.1);
+      border-radius: 14px;
+      background: oklch(0.2046 0 0);
+      overflow: hidden;
+    }
+    .detail-card-header {
+      padding: 16px 24px;
+      border-bottom: 1px solid oklch(0.9851 0 0 / 0.1);
+    }
+    .detail-card-footer {
+      border-top: 1px solid oklch(0.9851 0 0 / 0.1);
+      padding: 24px;
+    }
+    .detail-card-body { padding: 24px; }
+    .detail-card-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: oklch(0.9851 0 0);
+      line-height: 28px;
+    }
+    .detail-card-subtitle {
+      font-size: 14px;
+      color: oklch(0.7155 0 0);
+      line-height: 20px;
+      margin-top: 2px;
+      margin-bottom: 0;
+    }
+    .detail-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px 32px;
+    }
+    .detail-grid-3 {
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+    .detail-grid-4 {
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+    }
+    .detail-field-label {
+      font-size: 14px;
+      font-weight: 400;
+      color: oklch(0.7155 0 0);
+      line-height: 20px;
+      margin-bottom: 4px;
+    }
+    .detail-field-value {
+      font-size: 14px;
+      font-weight: 500;
+      color: oklch(0.9702 0 0);
+      line-height: 20px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .detail-field-value.mono {
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+    }
+    .detail-field-value a {
+      color: oklch(0.9702 0 0);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .detail-field-value a:hover { text-decoration: underline; }
+
+    /* Timeline / Histórico */
+    .timeline { display: flex; flex-direction: column; }
+    .timeline-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .timeline-item:last-child { border-bottom: none; }
+    .timeline-dot-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 4px;
+      flex-shrink: 0;
+    }
+    .timeline-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .timeline-content { flex: 1; min-width: 0; }
+    .timeline-title {
+      font-size: 14px;
+      font-weight: 500;
+      color: oklch(0.9702 0 0);
+      line-height: 20px;
+    }
+    .timeline-meta {
+      font-size: 13px;
+      color: oklch(0.7155 0 0);
+      line-height: 18px;
+      margin-top: 2px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .timeline-date {
+      font-size: 13px;
+      color: oklch(0.7155 0 0);
+      white-space: nowrap;
+      margin-left: auto;
+      padding-left: 16px;
+    }
+    .timeline-footer {
+      padding: 14px 0 0;
+      font-size: 13px;
+      color: oklch(0.5 0 0);
+    }
+
+    /* Card copy icon */
+    .detail-copy-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: none;
+      border: none;
+      padding: 2px;
+      margin-left: 4px;
+      cursor: pointer;
+      color: oklch(0.5 0 0);
+      border-radius: 4px;
+      transition: color 0.1s;
+      flex-shrink: 0;
+      vertical-align: middle;
+    }
+    .detail-copy-btn:hover { color: oklch(0.9702 0 0); }
+
+    .copy-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: none;
+      border: none;
+      padding: 2px;
+      margin-left: 4px;
+      cursor: pointer;
+      color: var(--muted-fg);
+      border-radius: 4px;
+      transition: color 0.1s;
+      flex-shrink: 0;
+    }
+    .copy-btn:hover { color: var(--foreground); }
+  </style>
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <svg width="72" height="29" viewBox="0 0 72 29" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M15.3435 4.93724C13.4796 4.93724 12.0437 5.88451 11.1882 7.50411C10.5771 5.79325 9.06233 4.93724 7.07596 4.93724C5.45636 4.93724 4.20413 5.70141 3.37873 7.0761V5.31697H0V20.1836H3.37873V11.9037C3.37873 9.3068 4.41784 7.96214 6.09807 7.96214C7.65645 7.96214 8.3588 8.92766 8.3588 10.8828V20.1836H11.6769L11.585 11.4145C11.585 8.90941 12.7154 7.96155 14.3044 7.96155C15.8015 7.96155 16.5045 8.92707 16.5045 10.8822V20.183H19.9138L19.8526 9.94734C19.8526 6.61806 18.1541 4.93724 15.3435 4.93724Z" fill="#FAFAFA"/>
+<path d="M28.4475 4.98066C25.0959 4.98066 22.2629 7.02179 22.4454 10.7084L25.5833 10.9522C25.4309 9.03289 26.4976 7.81363 28.5388 7.81363C30.3668 7.81363 31.433 8.78857 31.433 10.0991V10.6472L28.0207 11.2259C24.2734 11.8352 22.4148 13.4195 22.4148 16.2531C22.4148 18.4467 24.0903 20.6403 27.442 20.6403C29.3006 20.6403 30.7324 19.7266 31.433 18.4773V20.1835H34.5709V10.2816C34.5715 7.02179 32.3773 4.98066 28.4475 4.98066ZM31.433 13.9682C31.433 16.1618 30.0618 17.6242 28.0813 17.6242C26.5889 17.6242 25.5828 16.9236 25.5828 15.8569C25.5828 14.6382 26.6796 14.0895 28.5076 13.7545L31.4324 13.267V13.9682H31.433Z" fill="#FAFAFA"/>
+<path d="M37.5222 1.33514e-05V20.1835H40.8733V1.33514e-05H37.5222Z" fill="#FAFAFA"/>
+<path d="M65.1189 4.98066C61.7673 4.98066 58.9343 7.02179 59.1168 10.7084L62.2547 10.9522C62.1022 9.03289 63.1684 7.81363 65.2102 7.81363C67.0382 7.81363 68.1044 8.78857 68.1044 10.0991V10.6472L64.6921 11.2259C60.9442 11.8352 59.0862 13.4195 59.0862 16.2531C59.0862 18.4467 60.7617 20.6403 64.1134 20.6403C65.972 20.6403 67.4038 19.7266 68.1049 18.4773V20.1835H71.2429V10.2816C71.2429 7.02179 69.0493 4.98066 65.1189 4.98066ZM68.1049 13.9682C68.1049 16.1618 66.7338 17.6242 64.7533 17.6242C63.2603 17.6242 62.2547 16.9236 62.2547 15.8569C62.2547 14.6382 63.3515 14.0895 65.1795 13.7545L68.1044 13.267V13.9682H68.1049Z" fill="#FAFAFA"/>
+<path d="M52.7642 18.73H47.4944C46.5854 18.73 46.0338 18.2366 46.0338 17.645C46.0338 16.9544 46.5531 16.527 47.3973 16.527H50.5888C53.7379 16.527 56.3348 14.0284 56.3348 10.9052C56.3348 9.68885 55.978 8.70213 55.2309 7.78195L58.0162 7.91736L58.0233 5.31575H54.5498C53.2516 5.31575 52.375 5.16033 51.4489 5.0885C50.9968 5.01727 50.5199 4.98018 50.0224 4.98018C45.9378 4.98018 43.7065 7.24738 43.7065 10.7733C43.7065 12.417 44.4207 13.7652 45.6223 14.8832C44.0315 15.1464 42.9277 16.4616 42.9277 17.7433C42.9277 18.6964 43.3498 19.6172 44.2588 20.1759C42.9277 21.0967 42.3436 22.346 42.3436 23.9238C42.3436 26.6525 44.4536 28.5924 48.3817 28.5924H51.9853C55.4918 28.5924 58.0886 26.5866 58.0886 23.4634C58.0881 20.6699 56.0104 18.73 52.7642 18.73ZM50.0048 7.67421C52.2255 7.67421 52.9914 9.15369 52.9914 10.8063C52.9914 12.4588 52.1495 13.9383 50.0048 13.9383C47.86 13.9383 47.0182 12.4588 47.0182 10.8063C47.0182 9.15428 47.7841 7.67421 50.0048 7.67421ZM52.1472 25.8313H48.414C46.6614 25.8313 45.7842 24.8781 45.7842 23.6612C45.7842 22.7074 46.1739 21.4582 48.2515 21.4582H52.2119C53.7379 21.4582 54.6793 22.28 54.6793 23.5293C54.6793 24.9764 53.6732 25.8313 52.1472 25.8313Z" fill="#FAFAFA"/>
+      </svg>
+    </div>
+
+    <nav class="sidebar-nav">
+      <!-- Painel de Dados -->
+      <div class="nav-group">
+        <div class="nav-item">
+          <img class="nav-icon" src="icon/BarChart4.svg" width="16" height="16" alt="" />
+          Painel de Dados
+          <svg class="nav-chevron" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+        </div>
+        <div class="nav-sub" style="display:none">
+          <div class="nav-item">Visão geral</div>
+          <div class="nav-item">Performance</div>
+        </div>
+      </div>
+
+      <div class="nav-item">
+        <img class="nav-icon" src="icon/ArrowRightLeft.svg" width="16" height="16" alt="" />
+        Fluxos Inteligentes
+      </div>
+
+      <!-- Cobranças: active, links back to list -->
+      <a class="nav-item active" href="./cobrancas.html">
+        <img class="nav-icon" src="icon/DollarSign.svg" width="16" height="16" alt="" />
+        Cobranças
+      </a>
+
+      <div class="nav-item">
+        <img class="nav-icon" src="icon/Link2.svg" width="16" height="16" alt="" />
+        Links de Pagamento
+      </div>
+
+      <div class="nav-item">
+        <img class="nav-icon" src="icon/UsersRound.svg" width="16" height="16" alt="" />
+        Clientes
+      </div>
+
+      <div class="nav-item">
+        <img class="nav-icon" src="icon/Store.svg" width="16" height="16" alt="" />
+        Subcontas
+      </div>
+
+      <div class="nav-item">
+        <img class="nav-icon" src="icon/Repeat.svg" width="16" height="16" alt="" />
+        Assinaturas
+      </div>
+
+      <div class="nav-item">
+        <img class="nav-icon" src="icon/CreditCard.svg" width="16" height="16" alt="" />
+        Cartões
+      </div>
+
+    </nav>
+
+    <div class="sidebar-user">
+      <div class="sidebar-user-inner">
+        <div class="sidebar-avatar">U</div>
+        <div style="flex:1;min-width:0">
+          <div class="sidebar-user-name">Usuário Owner 12</div>
+          <div class="sidebar-user-email">engineer@plugpagamentos.com</div>
+        </div>
+        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="oklch(0.7155 0 0)" stroke-width="2" style="flex-shrink:0"><circle cx="12" cy="5" r="1" fill="oklch(0.7155 0 0)"/><circle cx="12" cy="12" r="1" fill="oklch(0.7155 0 0)"/><circle cx="12" cy="19" r="1" fill="oklch(0.7155 0 0)"/></svg>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <div class="main-wrap">
+
+    <!-- Topbar -->
+    <header class="topbar">
+      <button class="topbar-toggle">
+        <img src="icon/PanelLeft.svg" width="16" height="16" alt="" />
+      </button>
+      <div class="search-wrap">
+        <div class="search-field">
+          <span class="search-field-icon">
+            <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+          </span>
+          <input class="search-input" type="text" placeholder="Buscar cobranças" autocomplete="off" />
+        </div>
+      </div>
+    </header>
+
+    <!-- Content -->
+    <main class="content">
+      <div class="content-inner">
+
+        <!-- Breadcrumb -->
+        <nav class="breadcrumb">
+          <a href="./cobrancas.html">Cobranças</a>
+          <span class="breadcrumb-sep">
+            <svg width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+          </span>
+          <span class="breadcrumb-current">Detalhes</span>
+        </nav>
+
+        <!-- Header -->
+        <div class="detail-header">
+          <div class="detail-header-left">
+            <div class="detail-amount-row">
+              <span class="detail-amount" id="d-amount">R$ 0,00</span>
+              <span id="d-badge-header"></span>
+            </div>
+            <div class="detail-subtitle">Cobrança feita à <a href="#">Milena Carneiro Rios de Oliveira ↗</a></div>
+          </div>
+          <button class="btn-estornar">
+            <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 00-9-9 9 9 0 00-6 2.3L3 13"/></svg>
+            Estornar
+          </button>
+        </div>
+
+        <div class="detail-cards">
+
+          <!-- Card: info básica (4 colunas) -->
+          <div class="detail-card">
+            <div class="detail-card-body">
+              <div class="detail-grid detail-grid-4">
+                <div>
+                  <div class="detail-field-label">Data de criação</div>
+                  <div class="detail-field-value" id="d-date">—</div>
+                </div>
+                <div>
+                  <div class="detail-field-label">Método</div>
+                  <div class="detail-field-value" id="d-method">—</div>
+                </div>
+                <div>
+                  <div class="detail-field-label">Provedor responsável</div>
+                  <div class="detail-field-value" id="d-provider">—</div>
+                </div>
+                <div>
+                  <div class="detail-field-label">Serviços</div>
+                  <div class="detail-field-value" id="d-servicos">-</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card: Histórico de operações -->
+          <div class="detail-card">
+            <div class="detail-card-header" style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px">
+              <div>
+                <div class="detail-card-title">Histórico de operações</div>
+                <div class="detail-card-subtitle" style="margin-bottom:0">Eventos e requisições feitas aos provedores de pagamento e antifraudes.</div>
+              </div>
+              <button class="detail-copy-btn" title="Copiar JSON">
+                <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+              </button>
+            </div>
+            <div class="detail-card-body">
+              <div class="timeline" id="d-timeline"></div>
+              <div class="timeline-footer">Em caso de divergência nos status, contate o suporte.</div>
+            </div>
+          </div>
+
+          <!-- Card: Identificadores -->
+          <div class="detail-card">
+            <div class="detail-card-header">
+              <div class="detail-card-title">Identificadores</div>
+              <div class="detail-card-subtitle" style="margin-bottom:0">Chaves para localizar e acompanhar a subconta e a transação em fluxos operacionais.</div>
+            </div>
+            <div class="detail-card-body">
+              <div class="detail-grid">
+                <div>
+                  <div class="detail-field-label">Subconta</div>
+                  <div class="detail-field-value mono">eb22d3f1-396b-4867-aeac-c3c1f44c1276</div>
+                </div>
+                <div>
+                  <div class="detail-field-label">NSU</div>
+                  <div class="detail-field-value mono">4045272</div>
+                </div>
+                <div>
+                  <div class="detail-field-label">ID da cobrança</div>
+                  <div class="detail-field-value mono" id="d-charge-id-full">—</div>
+                </div>
+                <div id="d-venda-wrap" style="display:none">
+                  <div class="detail-field-label">ID da venda</div>
+                  <div class="detail-field-value mono" id="d-venda-id">—</div>
+                </div>
+                <div>
+                  <div class="detail-field-label">ID do pedido</div>
+                  <div class="detail-field-value">-</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card: Pagamento -->
+          <div class="detail-card">
+            <div class="detail-card-header">
+              <div class="detail-card-title">Pagamento</div>
+              <div class="detail-card-subtitle" style="margin-bottom:0">Informações de pagamento do cliente</div>
+            </div>
+            <div class="detail-card-body">
+              <div class="detail-grid">
+                <div>
+                  <div class="detail-field-label">Valor original</div>
+                  <div class="detail-field-value" id="d-valor-original">—</div>
+                </div>
+                <div>
+                  <div class="detail-field-label">Valor atual</div>
+                  <div class="detail-field-value" id="d-valor-atual">—</div>
+                </div>
+                <div>
+                  <div class="detail-field-label">Método de pagamento</div>
+                  <div class="detail-field-value" id="d-method2">—</div>
+                </div>
+                <div>
+                  <div class="detail-field-label">Número do cartão</div>
+                  <div class="detail-field-value">
+                    <svg width="18" height="14" viewBox="0 0 38 24" fill="none"><rect width="38" height="24" rx="4" fill="#EB001B" opacity="0.9"/><circle cx="15" cy="12" r="7" fill="#EB001B"/><circle cx="23" cy="12" r="7" fill="#F79E1B"/><path d="M19 6.8a7 7 0 010 10.4A7 7 0 0119 6.8z" fill="#FF5F00"/></svg>
+                    5262 18** **** 6621
+                    <a href="#" style="color:oklch(0.5608 0.1779 170.45);margin-left:2px">↗</a>
+                  </div>
+                </div>
+                <div>
+                  <div class="detail-field-label">Nome do cartão</div>
+                  <div class="detail-field-value">teste esa</div>
+                </div>
+                <div>
+                  <div class="detail-field-label">Parcelamento</div>
+                  <div class="detail-field-value">À vista</div>
+                </div>
+                <div>
+                  <div class="detail-field-label">Descrição</div>
+                  <div class="detail-field-value">platformFee &amp; all methods</div>
+                </div>
+                <div>
+                  <div class="detail-field-label">Descrição do recibo</div>
+                  <div class="detail-field-value">-</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card: Cliente -->
+          <div class="detail-card">
+            <div class="detail-card-header">
+              <div class="detail-card-title">Cliente</div>
+              <div class="detail-card-subtitle" style="margin-bottom:0">Informações cadastrais do cliente</div>
+            </div>
+            <div class="detail-card-body">
+              <div class="detail-grid">
+                <div>
+                  <div class="detail-field-label">Nome</div>
+                  <div class="detail-field-value">Milena Carneiro Rios de Oliveira</div>
+                </div>
+                <div>
+                  <div class="detail-field-label">ID</div>
+                  <div class="detail-field-value mono">2dbf34ec-3cac-4868-8a7d-e497dc643742</div>
+                </div>
+                <div>
+                  <div class="detail-field-label">Documento</div>
+                  <div class="detail-field-value">
+                    <span style="font-size:14px">🇧🇷</span>
+                    060.841.325-96
+                  </div>
+                </div>
+                <div>
+                  <div class="detail-field-label">E-mail</div>
+                  <div class="detail-field-value">milenacarneiro83@hotmail.com</div>
+                </div>
+                <div>
+                  <div class="detail-field-label">Telefone</div>
+                  <div class="detail-field-value">77981229721</div>
+                </div>
+                <div>
+                  <div class="detail-field-label">Endereço</div>
+                  <div class="detail-field-value">Avenida Vereador João de Luca</div>
+                </div>
+                <div>
+                  <div class="detail-field-label">Número</div>
+                  <div class="detail-field-value">12</div>
+                </div>
+                <div>
+                  <div class="detail-field-label">Complemento</div>
+                  <div class="detail-field-value">-</div>
+                </div>
+                <div>
+                  <div class="detail-field-label">Bairro</div>
+                  <div class="detail-field-value">Jardim Prudência</div>
+                </div>
+                <div>
+                  <div class="detail-field-label">Cidade</div>
+                  <div class="detail-field-value">São Paulo</div>
+                </div>
+                <div>
+                  <div class="detail-field-label">Estado</div>
+                  <div class="detail-field-value">São Paulo</div>
+                </div>
+                <div>
+                  <div class="detail-field-label">País</div>
+                  <div class="detail-field-value">Brasil</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card: Cobranças vinculadas (shown only for ac3a924f and 67e2ee4a) -->
+          <div class="detail-card" id="d-vinculadas-card" style="display:none">
+            <div class="detail-card-header">
+              <div class="detail-card-title">Cobranças vinculadas</div>
+              <div class="detail-card-subtitle" style="margin-bottom:0">Gerencie todas as cobranças associadas à mesma venda</div>
+            </div>
+            <div class="detail-card-body" style="padding:0">
+              <table style="width:100%;border-collapse:collapse;font-size:14px">
+                <thead>
+                  <tr style="border-bottom:1px solid var(--border)">
+                    <th style="padding:12px 24px;text-align:left;font-weight:500;color:var(--muted-fg);font-size:13px">Data de criação</th>
+                    <th style="padding:12px 16px;text-align:left;font-weight:500;color:var(--muted-fg);font-size:13px">ID da cobrança</th>
+                    <th style="padding:12px 16px;text-align:left;font-weight:500;color:var(--muted-fg);font-size:13px">Valor original</th>
+                    <th style="padding:12px 16px;text-align:left;font-weight:500;color:var(--muted-fg);font-size:13px">Valor atual</th>
+                    <th style="padding:12px 16px;text-align:left;font-weight:500;color:var(--muted-fg);font-size:13px">Status</th>
+                    <th style="padding:12px 16px"></th>
+                  </tr>
+                </thead>
+                <tbody id="d-vinculadas-tbody">
+                  <tr id="d-vinculadas-row" style="cursor:pointer" onmouseenter="this.style.background='rgba(255,255,255,0.04)'" onmouseleave="this.style.background=''" onclick="openLinkedDetail()">
+                    <td style="padding:16px 24px;color:oklch(0.9702 0 0)" id="d-vlink-date">—</td>
+                    <td style="padding:16px 16px"><span class="charge-id" id="d-vlink-id">—</span></td>
+                    <td style="padding:16px 16px;color:oklch(0.9702 0 0)" id="d-vlink-valor-orig">—</td>
+                    <td style="padding:16px 16px;color:oklch(0.9702 0 0)" id="d-vlink-valor-atual">—</td>
+                    <td style="padding:16px 16px" id="d-vlink-status">—</td>
+                    <td style="padding:16px 16px;text-align:right">
+                      <button class="copy-btn" style="width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.06);border-radius:6px;border:none;cursor:pointer;color:var(--muted-fg)" onclick="event.stopPropagation()">
+                        <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div><!-- /detail-cards -->
+      </div><!-- /content-inner -->
+    </main>
+  </div>
+
+<script>
+  const CHARGES = [
+    { id: '7005622c-1828-4fd6-9ecc-cad74d34cc7b', date: '28/05/26 12:06', metodo: 'credito', provedor: 'stripe',    valor: 'R$ 347,90', status: 'autorizada' },
+    { id: 'd2f5523e-a4b1-4c2d-8f3e-c7d2e18cdd9b', date: '22/05/26 10:48', metodo: 'pix',     provedor: 'pagarme',  valor: 'R$ 128,50', status: 'autorizada' },
+    { id: 'ac3a924f-2b3e-4a1d-9c5f-d8e3f76cdd54', date: '22/05/26 10:31', metodo: 'credito', provedor: 'cielo',    valor: 'R$ 200,00', status: 'autorizada' },
+    { id: '67e2ee4a-f3b1-4d2c-9a1e-bfc1e48a3835', date: '22/05/26 10:31', metodo: 'credito', provedor: 'starkbank', valor: 'R$ 300,00', status: 'autorizada' },
+    { id: 'f77d1dc4-3e2b-4f1a-8d6c-e9f4b298f0ef', date: '22/05/26 10:27', metodo: 'credito', provedor: 'stripe',   valor: 'R$ 189,00', status: 'recusada' },
+    { id: '7a019b3d-4f2c-4e1b-9a7d-f1e5c3592f66', date: '22/05/26 10:19', metodo: 'credito', provedor: 'starkbank', valor: 'R$ 412,75', status: 'recusada' },
+    { id: 'fc7743a2-5b3d-4c2e-8f1a-d6e7f4c4b3b8', date: '22/05/26 10:14', metodo: 'boleto',  provedor: 'pagarme',  valor: 'R$ 95,40',  status: 'pendente' },
+    { id: '9e8226b1-6c4e-4d3f-9e2b-e7f8d5c692f4', date: '22/05/26 09:58', metodo: 'pix',     provedor: 'cielo',    valor: 'R$ 256,00', status: 'autorizada' },
+    { id: 'b1b444c3-7d5f-4e4a-8f3c-f8e9d60dd7d7', date: '22/05/26 09:43', metodo: 'credito', provedor: 'stripe',   valor: 'R$ 173,20', status: 'autorizada' },
+    { id: 'aff9e4d2-8e6a-4f5b-9a4d-e9fae7febdcc', date: '22/05/26 09:31', metodo: 'credito', provedor: 'starkbank', valor: 'R$ 88,00',  status: 'recusada' },
+  ];
+
+  const providerMeta = {
+    stripe:    { icon: 'icon/Asset.svg',      label: 'Stripe',    histLabel: 'Stripe' },
+    starkbank: { icon: 'icon/Providers-2.svg', label: 'Starkbank', histLabel: 'Starkbank' },
+    pagarme:   { icon: 'icon/Providers-1.svg', label: 'Pagar.me',  histLabel: 'Pagar.me' },
+    cielo:     { icon: 'icon/Providers.svg',   label: 'Cielo',     histLabel: 'Cielo' },
+    sandbox:   { icon: '',                      label: 'Sandbox',   histLabel: 'Sandbox' },
+  };
+  const methodMeta = {
+    credito: { icon: 'icon/Payment Method Icon.svg',    label: 'Crédito', r: 4 },
+    debito:  { icon: 'icon/Payment Method Icon.svg',    label: 'Débito',  r: 4 },
+    pix:     { icon: 'icon/Name=Pix, Version=Symbol-Dark.svg', label: 'PIX', r: 6 },
+    boleto:  { icon: 'icon/Payment Method Icon-1.svg',  label: 'Boleto',  r: 4 },
+  };
+  const statusMeta = {
+    autorizada: { dot: '#4ade80', label: 'Autorizada', cls: 'badge-autorizada', hist: 'Autorização bem-sucedida' },
+    recusada:   { dot: '#f87171', label: 'Recusada',   cls: 'badge-recusada',   hist: 'Autorização recusada' },
+    pendente:   { dot: '#c084fc', label: 'Pendente',   cls: 'badge-pendente',   hist: 'Processamento pendente' },
+  };
+
+  const linkedMap = {
+    'ac3a924f-2b3e-4a1d-9c5f-d8e3f76cdd54': '67e2ee4a-f3b1-4d2c-9a1e-bfc1e48a3835',
+    '67e2ee4a-f3b1-4d2c-9a1e-bfc1e48a3835': 'ac3a924f-2b3e-4a1d-9c5f-d8e3f76cdd54'
+  };
+
+  let linkedChargeId = null;
+
+  function iconImg(src, size, radius) {
+    return src ? `<img src="${src}" width="${size}" height="${size}" alt="" style="border-radius:${radius}px;flex-shrink:0" />` : '';
+  }
+
+  function populateDetail(charge) {
+    const { id, date, metodo, provedor, valor, status } = charge;
+
+    // Amount + badge
+    document.getElementById('d-amount').textContent = valor;
+    const sm = statusMeta[status] || {};
+    document.getElementById('d-badge-header').innerHTML =
+      `<span class="badge ${sm.cls||''}"><span class="badge-dot"></span>${sm.label||status}</span>`;
+
+    // Date
+    document.getElementById('d-date').textContent = date;
+
+    // Method
+    const mm = methodMeta[metodo] || {};
+    document.getElementById('d-method').innerHTML =
+      iconImg(mm.icon, 18, mm.r||4) + (mm.label || metodo);
+    document.getElementById('d-method2').innerHTML =
+      iconImg(mm.icon, 18, mm.r||4) + (mm.label || metodo);
+
+    // Provider
+    const pm = providerMeta[provedor] || { icon:'', label: provedor };
+    document.getElementById('d-provider').innerHTML =
+      iconImg(pm.icon, 18, 6) + pm.label;
+
+    // Charge ID
+    document.getElementById('d-charge-id-full').textContent = id;
+
+    // ID da venda
+    const showVenda = !!linkedMap[id];
+    document.getElementById('d-venda-wrap').style.display = showVenda ? '' : 'none';
+    if (showVenda) document.getElementById('d-venda-id').textContent = 'vd-3f92a1b4-8e07-4c5d-b2f1-9a6e4d081c3e';
+
+    // Cobranças vinculadas
+    const vinculadasCard = document.getElementById('d-vinculadas-card');
+    if (linkedMap[id]) {
+      vinculadasCard.style.display = '';
+      linkedChargeId = linkedMap[id];
+      const linked = CHARGES.find(c => c.id === linkedChargeId);
+      if (linked) {
+        const lIdShort = linked.id.slice(0,6) + '...' + linked.id.slice(-6);
+        const lsm = statusMeta[linked.status] || {};
+        document.getElementById('d-vlink-date').textContent = linked.date;
+        document.getElementById('d-vlink-id').textContent = lIdShort;
+        document.getElementById('d-vlink-valor-orig').textContent = linked.valor;
+        document.getElementById('d-vlink-valor-atual').textContent = linked.valor;
+        document.getElementById('d-vlink-status').innerHTML =
+          `<span class="badge ${lsm.cls||''}"><span class="badge-dot"></span>${lsm.label||linked.status}</span>`;
+      }
+    } else {
+      vinculadasCard.style.display = 'none';
+      linkedChargeId = null;
+    }
+
+    // Valores
+    document.getElementById('d-valor-original').textContent = valor;
+    document.getElementById('d-valor-atual').textContent = valor;
+
+    // Timeline
+    const dateTime = date + ':57';
+    document.getElementById('d-timeline').innerHTML = `
+      <div class="timeline-item">
+        <div class="timeline-dot-wrap"><div class="timeline-dot" style="background:${sm.dot||'#4ade80'}"></div></div>
+        <div class="timeline-content">
+          <div class="timeline-title">${sm.hist || 'Evento processado'}</div>
+          <div class="timeline-meta">
+            Requisição feita em
+            ${iconImg(pm.icon, 14, 4)}
+            ${pm.label}
+          </div>
+        </div>
+        <div class="timeline-date">${dateTime}</div>
+      </div>
+    `;
+  }
+
+  function openLinkedDetail() {
+    if (linkedChargeId) {
+      sessionStorage.setItem('selectedChargeId', linkedChargeId);
+      sessionStorage.setItem('selectedChargeId', linkedChargeId);
+      window.location.href = './cobranca-detalhe.html';
+    }
+  }
+
+  // Initialize from URL param or sessionStorage fallback
+  (function init() {
+    const id = sessionStorage.getItem('selectedChargeId');
+    if (!id) return;
+    const charge = CHARGES.find(c => c.id === id);
+    if (charge) {
+      populateDetail(charge);
+    }
+  })();
+</script>
+
+</body>
+</html>
